@@ -25,6 +25,7 @@ export const FleetService = {
       tankerType = "ALL",
       material = "ALL",
       company = "ALL",
+      date = "",
       sortBy = "id",
       sortOrder = "asc",
       page = 1,
@@ -82,6 +83,20 @@ export const FleetService = {
     if (company && company !== "ALL") {
       filtered = filtered.filter(
         (v) => v.company.toLowerCase() === company.toLowerCase()
+      );
+    }
+
+    // 6. Specific Date filter (matches lastServiceDate or registrationDate)
+    if (date && date.trim() && date !== "ALL") {
+      const targetDate = date.trim();
+      filtered = filtered.filter(
+        (v) =>
+          (v.lastServiceDate &&
+            (v.lastServiceDate === targetDate ||
+              v.lastServiceDate.startsWith(targetDate))) ||
+          (v.registrationDate &&
+            (v.registrationDate === targetDate ||
+              v.registrationDate.startsWith(targetDate)))
       );
     }
 

@@ -4,6 +4,7 @@ import {
   ArrowDown,
   ArrowUp,
   ArrowUpDown,
+  Calendar,
   Check,
   Columns3,
   Download,
@@ -50,6 +51,7 @@ export default function RecentLoadLogsTable() {
     setCategory,
     setCompany,
     setType,
+    setDate,
     handleSort,
     setPage,
     setPageSize,
@@ -76,11 +78,13 @@ export default function RecentLoadLogsTable() {
   });
 
   const [showColumnDropdown, setShowColumnDropdown] = useState(false);
+  const [showDateDropdown, setShowDateDropdown] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
 
   const columnDropdownRef = useRef<HTMLDivElement>(null);
+  const dateDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close column dropdown when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -88,6 +92,12 @@ export default function RecentLoadLogsTable() {
         !columnDropdownRef.current.contains(event.target as Node)
       ) {
         setShowColumnDropdown(false);
+      }
+      if (
+        dateDropdownRef.current &&
+        !dateDropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowDateDropdown(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -183,14 +193,23 @@ export default function RecentLoadLogsTable() {
     (params.status !== "ALL" ? 1 : 0) +
     (params.category !== "ALL" ? 1 : 0) +
     (params.company && params.company !== "ALL" ? 1 : 0) +
-    (params.type !== "ALL" ? 1 : 0);
+    (params.type !== "ALL" ? 1 : 0) +
+    (params.date && params.date.trim() ? 1 : 0);
 
   const startEntry = total === 0 ? 0 : (page - 1) * pageSize + 1;
   const endEntry = Math.min(page * pageSize, total);
 
+  // Common sample dates for quick filtering presets
+  const datePresets = [
+    { label: "2025-07-20 (Latest)", value: "2025-07-20" },
+    { label: "2025-07-19", value: "2025-07-19" },
+    { label: "2025-07-18", value: "2025-07-18" },
+    { label: "2025-07-17", value: "2025-07-17" },
+  ];
+
   return (
     <div className="rounded-2xl border border-[#14293C] bg-[#0A1A2B] p-4 sm:p-5 transition hover:border-[#1E3E5B]">
-      {/* Table Top Header: Title, Search, Filters, Columns, Export, Refresh */}
+      {/* Table Top Header: Title, Search, Date Filter, Filters, Columns, Export, Refresh */}
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between mb-4">
         <div>
           <div className="flex items-center gap-2">
@@ -209,7 +228,7 @@ export default function RecentLoadLogsTable() {
         {/* Action Controls Bar */}
         <div className="flex flex-wrap items-center gap-2.5">
           {/* Search Box */}
-          <div className="relative flex-1 sm:w-60 lg:w-64">
+          <div className="relative flex-1 sm:w-48 lg:w-52">
             <Search
               size={14}
               className="absolute left-3 top-1/2 -translate-y-1/2 text-[#56728D]"
@@ -218,7 +237,7 @@ export default function RecentLoadLogsTable() {
               type="text"
               value={params.search || ""}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search tanker, company, route..."
+              placeholder="Search tanker, company..."
               className="h-8.5 w-full rounded-lg border border-[#172D40] bg-[#071522] pl-8.5 pr-7 text-xs text-[#E8EEF5] placeholder:text-[#526D87] outline-none transition focus:border-[#FFA500] focus:ring-1 focus:ring-[#FFA500]/25"
             />
             {params.search && (
@@ -228,6 +247,121 @@ export default function RecentLoadLogsTable() {
               >
                 <X size={12} />
               </button>
+            )}
+          </div>
+
+          {/* Dedicated Interactive Calendar / Date Filter Popover */}
+          <div className="relative" ref={dateDropdownRef}>
+            <button
+              onClick={() => setShowDateDropdown(!showDateDropdown)}
+              className={`flex items-center gap-1.5 h-8.5 rounded-lg border px-3 text-xs font-medium transition cursor-pointer ${
+                params.date
+                  ? "border-[#38BDF8]/60 bg-[#38BDF8]/15 text-[#38BDF8] font-semibold ring-1 ring-[#38BDF8]/30"
+                  : showDateDropdown
+                  ? "border-[#FFA500]/50 bg-[#FFA500]/10 text-[#FFA500]"
+                  : "border-[#172D40] bg-[#071522] text-[#7E9AB5] hover:border-[#2C4863] hover:text-[#F1F5F9]"
+              }`}
+              title="Filter by Date"
+            >
+              <Calendar size={13} className={params.date ? "text-[#38BDF8]" : "text-[#7E9AB5]"} />
+              <span>{params.date ? params.date : "Date"}</span>
+              {params.date && (
+                <span
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setDate("");
+                  }}
+                  className="ml-0.5 rounded p-0.5 hover:bg-[#38BDF8]/20 hover:text-white"
+                  title="Clear Date"
+                >
+                  <X size={11} />
+                </span>
+              )}
+            </button>
+
+            {/* Calendar Popover Menu */}
+            {showDateDropdown && (
+              <div className="absolute right-0 mt-1.5 w-64 rounded-2xl border border-[#162D42] bg-[#0B1D2F] p-3.5 shadow-2xl z-40 animate-in fade-in zoom-in-95 duration-150">
+                <div className="flex items-center justify-between pb-2 border-b border-[#142637] mb-2.5">
+                  <span className="text-xs font-bold text-[#F1F5F9] flex items-center gap-1.5">
+                    <Calendar size={13} className="text-[#FFA500]" />
+                    <span>Filter by Date</span>
+                  </span>
+                  {params.date && (
+                    <button
+                      onClick={() => {
+                        setDate("");
+                        setShowDateDropdown(false);
+                      }}
+                      className="text-[10px] text-[#FFA500] hover:underline cursor-pointer"
+                    >
+                      Clear Filter
+                    </button>
+                  )}
+                </div>
+
+                {/* Date Input with Calendar Icon */}
+                <div className="mb-3">
+                  <label className="block text-[11px] font-medium text-[#7E9AB5] mb-1.5">
+                    Choose Specific Date:
+                  </label>
+                  <input
+                    type="date"
+                    value={params.date || ""}
+                    onChange={(e) => {
+                      setDate(e.target.value);
+                      setShowDateDropdown(false);
+                    }}
+                    className="h-8.5 w-full rounded-lg border border-[#182F45] bg-[#071522] px-2.5 text-xs text-[#E8EEF5] outline-none focus:border-[#FFA500] [color-scheme:dark] cursor-pointer"
+                  />
+                </div>
+
+                {/* Quick Date Shortcuts */}
+                <div>
+                  <span className="block text-[10px] font-semibold text-[#5E7995] uppercase tracking-wider mb-1.5">
+                    Quick Date Presets
+                  </span>
+                  <div className="space-y-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setDate("");
+                        setShowDateDropdown(false);
+                      }}
+                      className={`flex w-full items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition cursor-pointer ${
+                        !params.date
+                          ? "bg-[#FFA500]/15 text-[#FFA500] font-semibold border border-[#FFA500]/30"
+                          : "text-[#8DA6BE] hover:bg-[#0E2437] hover:text-[#F1F5F9]"
+                      }`}
+                    >
+                      <span>All Dates (Show All)</span>
+                      {!params.date && <Check size={12} className="text-[#FFA500]" />}
+                    </button>
+
+                    {datePresets.map((preset) => {
+                      const isSelected = params.date === preset.value;
+                      return (
+                        <button
+                          key={preset.value}
+                          type="button"
+                          onClick={() => {
+                            setDate(preset.value);
+                            setShowDateDropdown(false);
+                          }}
+                          className={`flex w-full items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition cursor-pointer ${
+                            isSelected
+                              ? "bg-[#38BDF8]/15 text-[#38BDF8] font-semibold border border-[#38BDF8]/30"
+                              : "text-[#8DA6BE] hover:bg-[#0E2437] hover:text-[#F1F5F9]"
+                          }`}
+                        >
+                          <span>{preset.label}</span>
+                          {isSelected && <Check size={12} className="text-[#38BDF8]" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
             )}
           </div>
 
@@ -273,7 +407,7 @@ export default function RecentLoadLogsTable() {
                   </div>
                 </div>
 
-                <div className="space-y-1 max-h-60 overflow-y-auto pr-0.5">
+                <div className="space-y-1 max-h-60 overflow-y-auto pr-0.5 custom-scrollbar">
                   {RECENT_LOGS_COLUMNS.map((col) => {
                     const isChecked = !!visibleColumns[col.id];
 
@@ -347,7 +481,7 @@ export default function RecentLoadLogsTable() {
 
       {/* Expandable Filter Drawer */}
       {showFilters && (
-        <div className="mb-4 rounded-xl border border-[#172D40] bg-[#071522]/80 p-3 text-xs animate-in fade-in duration-150">
+        <div className="mb-4 rounded-xl border border-[#172D40] bg-[#071522]/80 p-3.5 text-xs animate-in fade-in duration-150">
           <div className="flex items-center justify-between pb-2 border-b border-[#142637] mb-2.5">
             <span className="font-semibold text-[#F1F5F9] flex items-center gap-1.5">
               <SlidersHorizontal size={12} className="text-[#FFA500]" />
@@ -363,7 +497,7 @@ export default function RecentLoadLogsTable() {
             )}
           </div>
 
-          <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-4">
+          <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-5">
             {/* Status Filter */}
             <div>
               <label className="block text-[11px] font-medium text-[#7E9AB5] mb-1">
@@ -434,12 +568,66 @@ export default function RecentLoadLogsTable() {
                 <option value="Non-Local">Non-Local</option>
               </select>
             </div>
+
+            {/* Specific Date Filter */}
+            <div>
+              <label className="block text-[11px] font-medium text-[#7E9AB5] mb-1 flex items-center justify-between">
+                <span>Specific Date</span>
+                {params.date && (
+                  <button
+                    onClick={() => setDate("")}
+                    className="text-[10px] text-[#FFA500] hover:underline cursor-pointer"
+                  >
+                    Clear
+                  </button>
+                )}
+              </label>
+              <input
+                type="date"
+                value={params.date || ""}
+                onChange={(e) => setDate(e.target.value)}
+                className="h-8 w-full rounded-lg border border-[#182F45] bg-[#0B1A28] px-2.5 text-xs text-[#E8EEF5] outline-none focus:border-[#FFA500] [color-scheme:dark]"
+              />
+            </div>
+          </div>
+
+          {/* Quick Date Presets */}
+          <div className="mt-2.5 pt-2 border-t border-[#142637] flex flex-wrap items-center gap-1.5 text-[11px]">
+            <span className="text-[#5E7995] mr-1">Quick Date:</span>
+            <button
+              type="button"
+              onClick={() => setDate("")}
+              className={`px-2 py-0.5 rounded-md transition cursor-pointer ${
+                !params.date
+                  ? "bg-[#FFA500] text-[#071522] font-semibold"
+                  : "bg-[#0B1A28] text-[#7E9AB5] hover:text-[#F1F5F9] border border-[#162D42]"
+              }`}
+            >
+              All Dates
+            </button>
+            {datePresets.map((preset) => {
+              const isSelected = params.date === preset.value;
+              return (
+                <button
+                  key={preset.value}
+                  type="button"
+                  onClick={() => setDate(preset.value)}
+                  className={`px-2 py-0.5 rounded-md transition cursor-pointer ${
+                    isSelected
+                      ? "bg-[#FFA500] text-[#071522] font-semibold"
+                      : "bg-[#0B1A28] text-[#7E9AB5] hover:text-[#F1F5F9] border border-[#162D42]"
+                  }`}
+                >
+                  {preset.label}
+                </button>
+              );
+            })}
           </div>
         </div>
       )}
 
-      {/* Table Container */}
-      <div className="overflow-x-auto relative min-h-[220px]">
+      {/* Table Container with Smooth Custom Scrollbar */}
+      <div className="overflow-x-auto relative min-h-[220px] custom-scrollbar">
         {/* Loading Overlay */}
         {loading && (
           <div className="absolute inset-0 bg-[#0A1A2B]/70 backdrop-blur-xs flex items-center justify-center z-10">

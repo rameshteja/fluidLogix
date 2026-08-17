@@ -175,7 +175,7 @@ export default function ExportModal({
         </div>
 
         {/* Content Body */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-5 text-xs">
+        <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-5 text-xs">
           {/* 1. Format Selection */}
           <div>
             <label className="block text-xs font-semibold text-[#8DA6BE] mb-2">
@@ -307,7 +307,7 @@ export default function ExportModal({
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 rounded-xl border border-[#162D42] bg-[#071522] p-3 max-h-48 overflow-y-auto">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 rounded-xl border border-[#162D42] bg-[#071522] p-3 max-h-48 overflow-y-auto custom-scrollbar">
               {availableColumns.map((col) => {
                 const checked = selectedCols.includes(col.id);
 

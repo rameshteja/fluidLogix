@@ -59,6 +59,7 @@ export interface FleetQueryParams {
   tankerType?: "ALL" | TankerType;
   material?: "ALL" | MaterialCategory;
   company?: "ALL" | string;
+  date?: string;
   sortBy?: keyof FleetVehicle;
   sortOrder?: "asc" | "desc";
   page?: number;

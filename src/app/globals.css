@@ -177,6 +177,7 @@
   }
 }
 
+/* Smooth scrolling */
 html {
   scroll-behavior: smooth;
 }
@@ -200,6 +201,65 @@ a {
 ::selection {
   background: var(--primary);
   color: #071522;
+}
+
+/* ==========================================================================
+   Smooth Custom Scrollbars for All Browsers (Chrome, Edge, Firefox, Safari)
+   ========================================================================== */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #1c3b58 #071522;
+}
+
+/* Chrome, Edge, and Safari WebKit Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #071522;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1c3b58;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: background-color 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2b567d;
+}
+
+::-webkit-scrollbar-corner {
+  background: #071522;
+}
+
+/* Custom Reusable Scrollbar Utility Classes */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #1c3b58 #071522;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #071522;
+  border-radius: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #1c3b58;
+  border-radius: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #ffa500;
 }
 
 /* for image slider in hero section */

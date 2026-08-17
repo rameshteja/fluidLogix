@@ -50,6 +50,7 @@ export interface TableQueryParams {
   category?: string;
   company?: string;
   type?: string;
+  date?: string;
   sortBy?: keyof LoadLog;
   sortOrder?: "asc" | "desc";
   page?: number;

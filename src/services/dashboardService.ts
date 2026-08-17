@@ -55,6 +55,7 @@ export const DashboardService = {
       category = "ALL",
       company = "ALL",
       type = "ALL",
+      date = "",
       sortBy = "date",
       sortOrder = "desc",
       page = 1,
@@ -99,6 +100,12 @@ export const DashboardService = {
     // 5. Trip Type filter
     if (type && type !== "ALL") {
       filtered = filtered.filter((item) => item.type.toLowerCase() === type.toLowerCase());
+    }
+
+    // 6. Specific Date filter (matches YYYY-MM-DD)
+    if (date && date.trim() && date !== "ALL") {
+      const targetDate = date.trim();
+      filtered = filtered.filter((item) => item.date === targetDate || item.date.startsWith(targetDate));
     }
 
     // 5. Sorting

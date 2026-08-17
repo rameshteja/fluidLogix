@@ -4,6 +4,7 @@ import {
   ArrowDown,
   ArrowUp,
   ArrowUpDown,
+  Calendar,
   Check,
   Columns3,
   Download,
@@ -58,6 +59,7 @@ export default function FleetTable() {
     setTankerTypeFilter,
     setMaterialFilter,
     setCompanyFilter,
+    setDateFilter,
     resetFilters,
     handleSort,
     setPage,
@@ -94,12 +96,14 @@ export default function FleetTable() {
   });
 
   const [showColumnDropdown, setShowColumnDropdown] = useState(false);
+  const [showDateDropdown, setShowDateDropdown] = useState(false);
   const [showFiltersPanel, setShowFiltersPanel] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   const columnDropdownRef = useRef<HTMLDivElement>(null);
+  const dateDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close column dropdown when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -107,6 +111,12 @@ export default function FleetTable() {
         !columnDropdownRef.current.contains(event.target as Node)
       ) {
         setShowColumnDropdown(false);
+      }
+      if (
+        dateDropdownRef.current &&
+        !dateDropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowDateDropdown(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -206,10 +216,20 @@ export default function FleetTable() {
   const activeAdvancedFiltersCount =
     (params.tankerType && params.tankerType !== "ALL" ? 1 : 0) +
     (params.material && params.material !== "ALL" ? 1 : 0) +
-    (params.company && params.company !== "ALL" ? 1 : 0);
+    (params.company && params.company !== "ALL" ? 1 : 0) +
+    (params.date && params.date.trim() ? 1 : 0);
 
   const startEntry = total === 0 ? 0 : (page - 1) * pageSize + 1;
   const endEntry = Math.min(page * pageSize, total);
+
+  // Common sample dates for quick filtering presets in fleet records
+  const fleetDatePresets = [
+    { label: "2025-07-18 (Service)", value: "2025-07-18" },
+    { label: "2025-07-10", value: "2025-07-10" },
+    { label: "2025-07-02", value: "2025-07-02" },
+    { label: "2025-06-28", value: "2025-06-28" },
+    { label: "2025-06-15", value: "2025-06-15" },
+  ];
 
   const handleDelete = async (id: string) => {
     await deleteVehicle(id);
@@ -230,6 +250,121 @@ export default function FleetTable() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5">
+          {/* Dedicated Calendar / Date Filter Popover */}
+          <div className="relative" ref={dateDropdownRef}>
+            <button
+              onClick={() => setShowDateDropdown(!showDateDropdown)}
+              className={`flex items-center gap-1.5 h-9 rounded-xl border px-3 text-xs font-semibold transition cursor-pointer ${
+                params.date
+                  ? "border-[#38BDF8]/60 bg-[#38BDF8]/15 text-[#38BDF8] ring-1 ring-[#38BDF8]/30"
+                  : showDateDropdown
+                  ? "border-[#FFA500]/50 bg-[#FFA500]/10 text-[#FFA500]"
+                  : "border-[#18314A] bg-[#071522] text-[#8DA6BE] hover:border-[#2C4863] hover:text-[#F1F5F9]"
+              }`}
+              title="Filter fleet vehicles by service / registration date"
+            >
+              <Calendar size={13} className={params.date ? "text-[#38BDF8]" : "text-[#7E9AB5]"} />
+              <span>{params.date ? params.date : "Date"}</span>
+              {params.date && (
+                <span
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setDateFilter("");
+                  }}
+                  className="ml-0.5 rounded p-0.5 hover:bg-[#38BDF8]/20 hover:text-white"
+                  title="Clear Date"
+                >
+                  <X size={11} />
+                </span>
+              )}
+            </button>
+
+            {/* Calendar Popover Menu */}
+            {showDateDropdown && (
+              <div className="absolute right-0 mt-1.5 w-64 rounded-2xl border border-[#162D42] bg-[#0B1D2F] p-3.5 shadow-2xl z-40 animate-in fade-in zoom-in-95 duration-150">
+                <div className="flex items-center justify-between pb-2 border-b border-[#142637] mb-2.5">
+                  <span className="text-xs font-bold text-[#F1F5F9] flex items-center gap-1.5">
+                    <Calendar size={13} className="text-[#FFA500]" />
+                    <span>Filter by Service Date</span>
+                  </span>
+                  {params.date && (
+                    <button
+                      onClick={() => {
+                        setDateFilter("");
+                        setShowDateDropdown(false);
+                      }}
+                      className="text-[10px] text-[#FFA500] hover:underline cursor-pointer"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+
+                {/* Specific Date Picker Input */}
+                <div className="mb-3">
+                  <label className="block text-[11px] font-medium text-[#7E9AB5] mb-1.5">
+                    Choose Specific Date:
+                  </label>
+                  <input
+                    type="date"
+                    value={params.date || ""}
+                    onChange={(e) => {
+                      setDateFilter(e.target.value);
+                      setShowDateDropdown(false);
+                    }}
+                    className="h-8.5 w-full rounded-lg border border-[#182F45] bg-[#071522] px-2.5 text-xs text-[#E8EEF5] outline-none focus:border-[#FFA500] [color-scheme:dark] cursor-pointer"
+                  />
+                </div>
+
+                {/* Quick Date Shortcuts */}
+                <div>
+                  <span className="block text-[10px] font-semibold text-[#5E7995] uppercase tracking-wider mb-1.5">
+                    Quick Service Dates
+                  </span>
+                  <div className="space-y-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setDateFilter("");
+                        setShowDateDropdown(false);
+                      }}
+                      className={`flex w-full items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition cursor-pointer ${
+                        !params.date
+                          ? "bg-[#FFA500]/15 text-[#FFA500] font-semibold border border-[#FFA500]/30"
+                          : "text-[#8DA6BE] hover:bg-[#0E2437] hover:text-[#F1F5F9]"
+                      }`}
+                    >
+                      <span>All Dates (Show All)</span>
+                      {!params.date && <Check size={12} className="text-[#FFA500]" />}
+                    </button>
+
+                    {fleetDatePresets.map((preset) => {
+                      const isSelected = params.date === preset.value;
+                      return (
+                        <button
+                          key={preset.value}
+                          type="button"
+                          onClick={() => {
+                            setDateFilter(preset.value);
+                            setShowDateDropdown(false);
+                          }}
+                          className={`flex w-full items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition cursor-pointer ${
+                            isSelected
+                              ? "bg-[#38BDF8]/15 text-[#38BDF8] font-semibold border border-[#38BDF8]/30"
+                              : "text-[#8DA6BE] hover:bg-[#0E2437] hover:text-[#F1F5F9]"
+                          }`}
+                        >
+                          <span>{preset.label}</span>
+                          {isSelected && <Check size={12} className="text-[#38BDF8]" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
           {/* Column Selection Dropdown */}
           <div className="relative" ref={columnDropdownRef}>
             <button
@@ -272,7 +407,7 @@ export default function FleetTable() {
                   </div>
                 </div>
 
-                <div className="space-y-1 max-h-64 overflow-y-auto pr-0.5">
+                <div className="space-y-1 max-h-64 overflow-y-auto pr-0.5 custom-scrollbar">
                   {FLEET_COLUMNS.map((col) => {
                     const isChecked = !!visibleColumns[col.id];
 
@@ -415,19 +550,19 @@ export default function FleetTable() {
           <div className="flex items-center justify-between pb-2 border-b border-[#142637] mb-2.5">
             <div className="flex items-center gap-1.5 font-semibold text-[#F1F5F9]">
               <SlidersHorizontal size={13} className="text-[#FFA500]" />
-              <span>Column Filters</span>
+              <span>Advanced Column Filters</span>
             </div>
             {activeAdvancedFiltersCount > 0 && (
               <button
                 onClick={resetFilters}
                 className="text-[11px] text-[#FFA500] hover:underline cursor-pointer"
               >
-                Reset filters
+                Reset all filters
               </button>
             )}
           </div>
 
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {/* Tanker Type Filter */}
             <div>
               <label className="block text-[11px] font-medium text-[#7E9AB5] mb-1">
@@ -482,12 +617,66 @@ export default function FleetTable() {
                 <option value="IndusChem Ltd">IndusChem Ltd</option>
               </select>
             </div>
+
+            {/* Service Date Filter */}
+            <div>
+              <label className="block text-[11px] font-medium text-[#7E9AB5] mb-1 flex items-center justify-between">
+                <span>Service / Reg. Date</span>
+                {params.date && (
+                  <button
+                    onClick={() => setDateFilter("")}
+                    className="text-[10px] text-[#FFA500] hover:underline cursor-pointer"
+                  >
+                    Clear
+                  </button>
+                )}
+              </label>
+              <input
+                type="date"
+                value={params.date || ""}
+                onChange={(e) => setDateFilter(e.target.value)}
+                className="h-8 w-full rounded-lg border border-[#182F45] bg-[#0B1A28] px-2.5 text-xs text-[#E8EEF5] outline-none focus:border-[#FFA500] [color-scheme:dark]"
+              />
+            </div>
+          </div>
+
+          {/* Quick Service Date Presets */}
+          <div className="mt-2.5 pt-2 border-t border-[#142637] flex flex-wrap items-center gap-1.5 text-[11px]">
+            <span className="text-[#5E7995] mr-1">Quick Date:</span>
+            <button
+              type="button"
+              onClick={() => setDateFilter("")}
+              className={`px-2 py-0.5 rounded-md transition cursor-pointer ${
+                !params.date
+                  ? "bg-[#FFA500] text-[#071522] font-semibold"
+                  : "bg-[#0B1A28] text-[#7E9AB5] hover:text-[#F1F5F9] border border-[#162D42]"
+              }`}
+            >
+              All Dates
+            </button>
+            {fleetDatePresets.map((preset) => {
+              const isSelected = params.date === preset.value;
+              return (
+                <button
+                  key={preset.value}
+                  type="button"
+                  onClick={() => setDateFilter(preset.value)}
+                  className={`px-2 py-0.5 rounded-md transition cursor-pointer ${
+                    isSelected
+                      ? "bg-[#FFA500] text-[#071522] font-semibold"
+                      : "bg-[#0B1A28] text-[#7E9AB5] hover:text-[#F1F5F9] border border-[#162D42]"
+                  }`}
+                >
+                  {preset.label}
+                </button>
+              );
+            })}
           </div>
         </div>
       )}
 
       {/* 3. Table Container */}
-      <div className="overflow-x-auto relative min-h-[220px]">
+      <div className="overflow-x-auto relative min-h-[220px] custom-scrollbar">
         {loading && (
           <div className="absolute inset-0 bg-[#0A1A2B]/70 backdrop-blur-xs flex items-center justify-center z-10">
             <div className="flex items-center gap-2 rounded-full bg-[#071522] border border-[#1E3B56] px-4 py-2 text-xs font-medium text-[#FFA500] shadow-xl">

@@ -186,6 +186,10 @@ export function useFleetData(initialParams: FleetQueryParams = {}) {
     setParams((prev) => ({ ...prev, company, page: 1 }));
   };
 
+  const setDateFilter = (date: string) => {
+    setParams((prev) => ({ ...prev, date, page: 1 }));
+  };
+
   const resetFilters = () => {
     setParams({
       search: "",
@@ -193,6 +197,7 @@ export function useFleetData(initialParams: FleetQueryParams = {}) {
       tankerType: "ALL",
       material: "ALL",
       company: "ALL",
+      date: "",
       sortBy: "id",
       sortOrder: "asc",
       page: 1,
@@ -353,6 +358,7 @@ export function useFleetData(initialParams: FleetQueryParams = {}) {
     setTankerTypeFilter,
     setMaterialFilter,
     setCompanyFilter,
+    setDateFilter,
     resetFilters,
     handleSort,
     setPage,

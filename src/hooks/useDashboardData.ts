@@ -176,6 +176,11 @@ export function useLoadLogsTable(initialParams: TableQueryParams = {}) {
     setParams((prev) => ({ ...prev, type, page: 1 }));
   };
 
+  // Set Date Filter (YYYY-MM-DD)
+  const setDate = (date: string) => {
+    setParams((prev) => ({ ...prev, date, page: 1 }));
+  };
+
   // Toggle Sorting on column header
   const handleSort = (column: keyof LoadLog) => {
     setParams((prev) => {
@@ -201,7 +206,9 @@ export function useLoadLogsTable(initialParams: TableQueryParams = {}) {
       search: "",
       status: "ALL",
       category: "ALL",
+      company: "ALL",
       type: "ALL",
+      date: "",
       sortBy: "date",
       sortOrder: "desc",
       page: 1,
@@ -303,6 +310,7 @@ export function useLoadLogsTable(initialParams: TableQueryParams = {}) {
     setCategory,
     setCompany,
     setType,
+    setDate,
     handleSort,
     setPage,
     setPageSize,
