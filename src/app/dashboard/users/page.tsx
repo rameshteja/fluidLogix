@@ -3,9 +3,9 @@
 import { useState } from "react";
 import Sidebar from "@/components/dashboard/Sidebar";
 import TopNavbar from "@/components/dashboard/TopNavbar";
-import FleetTable from "@/components/fleet/FleetTable";
+import UserTable from "@/components/users/UserTable";
 
-export default function FleetPage() {
+export default function UsersPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -20,14 +20,14 @@ export default function FleetPage() {
       <div className="flex-1 flex flex-col min-w-0 min-h-screen overflow-x-clip">
         {/* Top Navbar */}
         <TopNavbar
-          title="Fleet"
-          subtitle="Sunday, 20 July 2025"
+          title="Users"
+          subtitle="Manage drivers, fleet owners & companies"
           onToggleMobileMenu={() => setMobileMenuOpen(true)}
         />
 
-        {/* Fleet Main Workspace */}
+        {/* Users Main Workspace */}
         <main className="flex-1 p-4 sm:p-6 lg:p-7 max-w-[1500px] w-full mx-auto space-y-6">
-          <FleetTable />
+          <UserTable />
         </main>
       </div>
     </div>

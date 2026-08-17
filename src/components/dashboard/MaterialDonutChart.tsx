@@ -16,13 +16,13 @@ export default function MaterialDonutChart() {
   const totalLoads = materials.reduce((acc, curr) => acc + curr.count, 0);
 
   return (
-    <div className="relative rounded-2xl border border-[#14293C] bg-[#0A1A2B] p-4 sm:p-5 transition hover:border-[#1E3E5B] flex flex-col justify-between">
+    <div className="relative rounded-2xl border border-border bg-card p-4 sm:p-5 transition hover:border-primary/40 text-card-foreground shadow-sm flex flex-col justify-between">
       {/* Header */}
       <div>
-        <h2 className="text-base font-bold text-[#F1F5F9] leading-snug">
+        <h2 className="text-base font-bold text-foreground leading-snug">
           Loads by Material
         </h2>
-        <p className="text-xs text-[#5E7995]">
+        <p className="text-xs text-muted-foreground">
           Live category breakdown
         </p>
       </div>
@@ -72,8 +72,8 @@ export default function MaterialDonutChart() {
                     if (active && payload && payload.length) {
                       const data = payload[0].payload;
                       return (
-                        <div className="rounded-xl border border-[#1F3E5C] bg-[#071728]/95 px-3 py-2 text-xs shadow-xl backdrop-blur-md">
-                          <div className="font-semibold text-[#F1F5F9]">{data.name}</div>
+                        <div className="rounded-xl border border-border bg-popover text-popover-foreground px-3 py-2 text-xs shadow-xl backdrop-blur-md">
+                          <div className="font-semibold text-foreground">{data.name}</div>
                           <div className="text-[#FFA500] font-medium">{data.loadsDisplay} ({data.percentage}%)</div>
                         </div>
                       );
@@ -94,16 +94,16 @@ export default function MaterialDonutChart() {
                   >
                     {materials[hoveredIdx].percentage}%
                   </span>
-                  <span className="text-[10px] font-medium text-[#7E9AB5] max-w-[70px] truncate">
+                  <span className="text-[10px] font-medium text-muted-foreground max-w-[70px] truncate">
                     {materials[hoveredIdx].name}
                   </span>
                 </>
               ) : (
                 <>
-                  <span className="text-base font-bold text-[#F1F5F9]">
+                  <span className="text-base font-bold text-foreground">
                     {totalLoads}
                   </span>
-                  <span className="text-[10px] font-medium text-[#5E7995]">
+                  <span className="text-[10px] font-medium text-muted-foreground">
                     Total Loads
                   </span>
                 </>
@@ -124,7 +124,7 @@ export default function MaterialDonutChart() {
               onMouseEnter={() => setHoveredIdx(i)}
               onMouseLeave={() => setHoveredIdx(null)}
               className={`flex items-center justify-between px-2 py-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
-                isHovered ? "bg-[#0E253A]" : "hover:bg-[#0D2134]"
+                isHovered ? "bg-muted text-foreground font-medium" : "hover:bg-muted/50 text-muted-foreground"
               }`}
             >
               <div className="flex items-center gap-2">
@@ -134,17 +134,17 @@ export default function MaterialDonutChart() {
                 />
                 <span
                   className={`transition-colors ${
-                    isHovered ? "text-[#F1F5F9] font-medium" : "text-[#839DB6]"
+                    isHovered ? "text-foreground font-medium" : "text-muted-foreground"
                   }`}
                 >
                   {mat.name}
                 </span>
               </div>
               <div className="flex items-center gap-3">
-                <span className="text-[11px] text-[#5A7692]">
+                <span className="text-[11px] text-muted-foreground">
                   {mat.loadsDisplay}
                 </span>
-                <span className="font-semibold text-[#E2E8F0] min-w-[28px] text-right">
+                <span className="font-semibold text-foreground min-w-[28px] text-right">
                   {mat.percentage}%
                 </span>
               </div>

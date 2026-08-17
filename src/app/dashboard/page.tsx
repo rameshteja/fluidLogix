@@ -12,7 +12,7 @@ export default function DashboardPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#071522] text-[#E8EEF5] flex selection:bg-[#FFA500] selection:text-[#071522]">
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-200 flex selection:bg-[#FFA500] selection:text-[#071522]">
       {/* Left Sidebar Navigation */}
       <Sidebar
         mobileOpen={mobileMenuOpen}
@@ -20,7 +20,7 @@ export default function DashboardPage() {
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 min-h-screen overflow-x-hidden">
+      <div className="flex-1 flex flex-col min-w-0 min-h-screen overflow-x-clip">
         {/* Top Navbar */}
         <TopNavbar onToggleMobileMenu={() => setMobileMenuOpen(true)} />
 

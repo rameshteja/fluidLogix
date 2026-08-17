@@ -22,17 +22,17 @@ export default function FloatingChat() {
     <>
       {/* Chat Window */}
       {open && (
-        <div className="fixed bottom-24 right-5 z-50 flex h-[480px] w-[360px] max-w-[calc(100vw-40px)] flex-col overflow-hidden rounded-2xl border border-[#29455C] bg-[#0D2031] shadow-2xl shadow-black/40">
+        <div className="fixed bottom-24 right-5 z-50 flex h-[480px] w-[360px] max-w-[calc(100vw-40px)] flex-col overflow-hidden rounded-2xl border border-border bg-card text-card-foreground shadow-2xl">
 
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-[#1A3042] px-5 py-4">
+          <div className="flex items-center justify-between border-b border-border px-5 py-4 bg-card">
             <div>
-              <h3 className="text-sm font-semibold">
+              <h3 className="text-sm font-semibold text-foreground">
                 FluidLogix Support
               </h3>
 
-              <div className="mt-1 flex items-center gap-2 text-xs text-[#00C897]">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#00C897]" />
+              <div className="mt-1 flex items-center gap-2 text-xs text-emerald-500 font-medium">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 Online
               </div>
             </div>
@@ -40,14 +40,14 @@ export default function FloatingChat() {
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="rounded-lg p-2 text-[#607B98] hover:bg-[#172A3A] hover:text-white"
+              className="rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer"
             >
               <X size={18} />
             </button>
           </div>
 
           {/* Messages */}
-          <div className="flex-1 space-y-4 overflow-y-auto p-4">
+          <div className="flex-1 space-y-4 overflow-y-auto p-4 custom-scrollbar bg-background/50">
             {messages.map((item, index) => (
               <div
                 key={index}
@@ -57,9 +57,9 @@ export default function FloatingChat() {
                   }`}
               >
                 <div
-                  className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm ${item.sender === "user"
-                      ? "rounded-br-md bg-[#FFA500] text-[#071522]"
-                      : "rounded-bl-md bg-[#172A3A] text-[#C6D2DE]"
+                  className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm font-medium ${item.sender === "user"
+                      ? "rounded-br-md bg-[#FFA500] text-[#071522] shadow-sm"
+                      : "rounded-bl-md bg-muted text-foreground border border-border"
                     }`}
                 >
                   {item.text}
@@ -69,21 +69,21 @@ export default function FloatingChat() {
           </div>
 
           {/* Input */}
-          <div className="border-t border-[#1A3042] p-3">
-            <div className="flex items-center gap-2 rounded-xl border border-[#24384D] bg-[#172437] px-3">
+          <div className="border-t border-border p-3 bg-card">
+            <div className="flex items-center gap-2 rounded-xl border border-border bg-background px-3 focus-within:border-[#FFA500]">
               <input
                 value={message}
                 onChange={(event) =>
                   setMessage(event.target.value)
                 }
                 placeholder="Type a message..."
-                className="h-11 min-w-0 flex-1 bg-transparent text-sm text-white outline-none placeholder:text-[#607B98]"
+                className="h-11 min-w-0 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
               />
 
               <button
                 type="button"
                 onClick={() => setMessage("")}
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#FFA500] text-[#071522]"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#FFA500] text-[#071522] hover:bg-[#FFB52E] transition cursor-pointer"
               >
                 <Send size={15} />
               </button>

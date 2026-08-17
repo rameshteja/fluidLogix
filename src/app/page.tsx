@@ -133,7 +133,7 @@ const roles = [
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#071522] text-[#E8EEF5]">
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-200">
       <Header />
 
       {/* HERO */}
@@ -150,14 +150,14 @@ export default function Home() {
             </div>
 
             {/* Heading */}
-            <h1 className="mx-auto max-w-4xl text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-7xl">
+            <h1 className="mx-auto max-w-4xl text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-7xl text-foreground">
               Manage Every Load,
               <br />
               <span className="text-[#FFA500]">Every Tanker,</span> Every Trip
             </h1>
 
             {/* Description */}
-            <p className="mx-auto mt-7 max-w-2xl text-sm leading-7 text-[#607B98] sm:text-base">
+            <p className="mx-auto mt-7 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
               FluidLogix brings fleet owners, drivers, and chemical companies
               onto one platform — with complete traceability, hazmat
               compliance, and automated monthly billing.
@@ -174,7 +174,7 @@ export default function Home() {
               </Link>
               <Link
                 href="/dashboard"
-                className="inline-flex items-center justify-center rounded-xl border border-[#1A3042] px-7 py-3.5 text-sm font-semibold text-[#E8EEF5] transition hover:bg-[#0D2031]"
+                className="inline-flex items-center justify-center rounded-xl border border-border px-7 py-3.5 text-sm font-semibold text-foreground transition hover:bg-muted"
               >
                 View Admin Demo
               </Link>
@@ -185,13 +185,13 @@ export default function Home() {
               {stats.map((stat) => (
                 <div
                   key={stat.label}
-                  className="rounded-xl border border-[#1A3042] bg-[#0D2031] px-4 py-5 transition hover:-translate-y-1 hover:border-[#29455C] hover:bg-[#10283D]"
+                  className="rounded-xl border border-border bg-card text-card-foreground px-4 py-5 transition hover:-translate-y-1 hover:border-primary/40 shadow-sm"
                 >
                   <div className="text-xl font-bold text-[#FFA500] sm:text-2xl">
                     {stat.value}
                   </div>
 
-                  <div className="mt-1 text-xs text-[#607B98]">
+                  <div className="mt-1 text-xs text-muted-foreground">
                     {stat.label}
                   </div>
                 </div>
@@ -203,14 +203,14 @@ export default function Home() {
         {/* FEATURES */}
         <section
           id="features"
-          className="border-t border-[#172A3A] py-20"
+          className="border-t border-border py-20"
         >
           <div className="mx-auto max-w-7xl px-5 lg:px-8">
             <div className="mb-10 text-center">
-              <h2 className="text-2xl font-bold sm:text-3xl">
+              <h2 className="text-2xl font-bold sm:text-3xl text-foreground">
                 Everything Your Fleet Operation Needs
               </h2>
-              <p className="mt-3 text-sm text-[#607B98]">
+              <p className="mt-3 text-sm text-muted-foreground">
                 Purpose-built for chemical and hazardous material transport
               </p>
             </div>
@@ -220,7 +220,7 @@ export default function Home() {
                 return (
                   <div
                     key={feature.title}
-                    className="rounded-xl border border-[#1A3042] bg-[#0D2031] p-6 transition hover:-translate-y-1 hover:border-[#29455C] hover:bg-[#10283D]"
+                    className="rounded-xl border border-border bg-card text-card-foreground p-6 transition hover:-translate-y-1 hover:border-primary/40 shadow-sm"
                   >
                     <div
                       className={`mb-5 flex h-10 w-10 items-center justify-center rounded-xl ${feature.bg}`}
@@ -228,11 +228,11 @@ export default function Home() {
                       <Icon size={19} className={feature.color} />
                     </div>
 
-                    <h3 className="text-base font-bold">
+                    <h3 className="text-base font-bold text-card-foreground">
                       {feature.title}
                     </h3>
 
-                    <p className="mt-3 text-sm leading-6 text-[#607B98]">
+                    <p className="mt-3 text-sm leading-6 text-muted-foreground">
                       {feature.description}
                     </p>
                   </div>
@@ -245,15 +245,15 @@ export default function Home() {
         {/* ROLES */}
         <section
           id="roles"
-          className="border-t border-[#172A3A] py-20"
+          className="border-t border-border py-20"
         >
           <div className="mx-auto max-w-7xl px-5 lg:px-8">
 
             <div className="mb-10 text-center">
-              <h2 className="text-2xl font-bold sm:text-3xl">
+              <h2 className="text-2xl font-bold sm:text-3xl text-foreground">
                 One Portal — Four Roles
               </h2>
-              <p className="mt-3 text-sm text-[#607B98]">
+              <p className="mt-3 text-sm text-muted-foreground">
                 Each user type sees exactly what they need to do their job
               </p>
             </div>
@@ -262,19 +262,19 @@ export default function Home() {
               {roles.map((role) => (
                 <div
                   key={role.title}
-                  className="rounded-xl border bg-[#0D2031] p-5"
+                  className="rounded-xl border bg-card text-card-foreground p-5 shadow-sm"
                   style={{
                     borderColor: `${role.color}55`,
                   }}
                 >
-                  <h3 className="mb-5 text-sm font-bold">
+                  <h3 className="mb-5 text-sm font-bold text-card-foreground">
                     {role.title}
                   </h3>
                   <div className="space-y-3">
                     {role.permissions.map((permission) => (
                       <div
                         key={permission}
-                        className="flex gap-2 text-xs text-[#7891A8]"
+                        className="flex gap-2 text-xs text-muted-foreground"
                       >
                         <CheckCircle2
                           size={14}
@@ -294,19 +294,19 @@ export default function Home() {
         {/* CTA */}
         <section
           id="support"
-          className="border-t border-[#172A3A] py-20"
+          className="border-t border-border py-20"
         >
           <div className="mx-auto max-w-3xl px-5 text-center">
-            <h2 className="text-2xl font-bold sm:text-3xl">
+            <h2 className="text-2xl font-bold sm:text-3xl text-foreground">
               Ready to digitize your fleet operations?
             </h2>
-            <p className="mt-4 text-sm text-[#607B98]">
+            <p className="mt-4 text-sm text-muted-foreground">
               Built on React, Node.js, and MongoDB — deploy on your
               infrastructure.
             </p>
             <Link
               href="/login"
-              className="mt-7 inline-flex items-center gap-2 rounded-xl bg-[#FFA500] px-7 py-3.5 text-sm font-bold text-[#071522] transition hover:bg-[#FFB52E]"
+              className="mt-7 inline-flex items-center gap-2 rounded-xl bg-[#FFA500] px-7 py-3.5 text-sm font-bold text-[#071522] transition hover:bg-[#FFB52E] shadow-sm"
             >
               Start Free Demo
               <ArrowRight size={17} />

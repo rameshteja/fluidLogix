@@ -13,7 +13,7 @@ export default function DashboardShell({
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex h-dvh overflow-hidden bg-[#071522] text-[#E8EEF5]">
+    <div className="flex h-dvh overflow-hidden bg-background text-foreground transition-colors duration-200">
       <Sidebar
         mobileOpen={sidebarOpen}
         onCloseMobile={() => setSidebarOpen(false)}

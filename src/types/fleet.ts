@@ -1,4 +1,5 @@
 import { MaterialCategory } from "./dashboard";
+export type { MaterialCategory };
 
 export type TankerType =
   | "Chemical Tanker"

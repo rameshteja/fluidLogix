@@ -54,7 +54,7 @@ export default function Sidebar({
   const pathname = usePathname();
 
   const sidebarContent = (
-    <div className="flex h-full flex-col justify-between bg-[#081523] border-r border-[#142637] px-4 py-5">
+    <div className="flex h-full flex-col justify-between bg-sidebar text-sidebar-foreground border-r border-sidebar-border px-4 py-5 transition-colors duration-200">
       {/* Brand Header */}
       <div>
         <div className="flex items-center justify-between px-2 pb-6">
@@ -64,10 +64,10 @@ export default function Sidebar({
             </div>
 
             <div>
-              <div className="text-base font-bold tracking-tight text-[#F1F5F9] leading-tight">
+              <div className="text-base font-bold tracking-tight text-sidebar-foreground leading-tight">
                 FluidLogix
               </div>
-              <div className="text-[11px] font-medium text-[#5E7995]">
+              <div className="text-[11px] font-medium text-muted-foreground">
                 Admin Portal
               </div>
             </div>
@@ -77,7 +77,7 @@ export default function Sidebar({
           {onCloseMobile && (
             <button
               onClick={onCloseMobile}
-              className="rounded-lg p-1.5 text-[#6E8BA7] hover:bg-[#0E2337] hover:text-[#F1F5F9] lg:hidden cursor-pointer"
+              className="rounded-lg p-1.5 text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground lg:hidden cursor-pointer"
               aria-label="Close sidebar"
             >
               <X size={18} />
@@ -101,12 +101,12 @@ export default function Sidebar({
                 onClick={onCloseMobile}
                 className={`group flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-medium transition-all duration-150 ${isActive
                     ? "bg-[#FFA500]/10 text-[#FFA500] shadow-[0_0_15px_rgba(255,165,0,0.08)] border border-[#FFA500]/25"
-                    : "text-[#7590AA] hover:bg-[#0D2235] hover:text-[#E8EEF5] border border-transparent"
+                    : "text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground border border-transparent"
                   }`}
               >
                 <Icon
                   size={18}
-                  className={`transition-colors ${isActive ? "text-[#FFA500]" : "text-[#627F9D] group-hover:text-[#FFA500]"
+                  className={`transition-colors ${isActive ? "text-[#FFA500]" : "text-muted-foreground group-hover:text-[#FFA500]"
                     }`}
                 />
                 <span>{item.name}</span>
@@ -117,21 +117,21 @@ export default function Sidebar({
       </div>
 
       {/* Bottom Actions */}
-      <div className="border-t border-[#132535] pt-4 space-y-1">
+      <div className="border-t border-sidebar-border pt-4 space-y-1">
         <Link
           href="/dashboard/settings"
           onClick={onCloseMobile}
-          className="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-medium text-[#7590AA] hover:bg-[#0D2235] hover:text-[#E8EEF5] transition"
+          className="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-medium text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition"
         >
-          <Settings size={18} className="text-[#627F9D]" />
+          <Settings size={18} className="text-muted-foreground" />
           <span>Settings</span>
         </Link>
 
         <Link
           href="/login"
-          className="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-medium text-[#7590AA] hover:bg-[#181F2C] hover:text-[#EF4444] transition"
+          className="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-medium text-muted-foreground hover:bg-destructive/10 hover:text-[#EF4444] transition"
         >
-          <LogOut size={18} className="text-[#627F9D] group-hover:text-[#EF4444]" />
+          <LogOut size={18} className="text-muted-foreground group-hover:text-[#EF4444]" />
           <span>Sign Out</span>
         </Link>
       </div>

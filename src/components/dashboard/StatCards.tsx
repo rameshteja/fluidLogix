@@ -35,7 +35,7 @@ export default function StatCards() {
         {[1, 2, 3, 4].map((i) => (
           <div
             key={i}
-            className="h-32 rounded-2xl border border-[#14293C] bg-[#0A1A2B]/60 p-5 animate-pulse"
+            className="h-32 rounded-2xl border border-border bg-card/60 p-5 animate-pulse"
           />
         ))}
       </div>
@@ -51,7 +51,7 @@ export default function StatCards() {
         return (
           <div
             key={stat.id}
-            className="group relative rounded-2xl border border-[#14293C] bg-[#0A1A2B] p-4 sm:p-5 transition-all duration-200 hover:border-[#1E3E5B] hover:bg-[#0C1E32] hover:shadow-[0_4px_20px_rgba(0,0,0,0.25)]"
+            className="group relative rounded-2xl border border-border bg-card p-4 sm:p-5 transition-all duration-200 hover:border-primary/40 shadow-sm"
           >
             {/* Top Icon */}
             <div className="flex items-center justify-between mb-3">
@@ -63,19 +63,19 @@ export default function StatCards() {
             </div>
 
             {/* Value */}
-            <div className="text-2xl sm:text-[28px] font-bold tracking-tight text-[#F1F5F9] leading-tight">
+            <div className="text-2xl sm:text-[28px] font-bold tracking-tight text-foreground leading-tight">
               {stat.value}
             </div>
 
             {/* Label */}
-            <div className="mt-1 text-xs font-medium text-[#7A95AF]">
+            <div className="mt-1 text-xs font-medium text-muted-foreground">
               {stat.title}
             </div>
 
             {/* Trend / Status Note */}
             <div
               className={`mt-2 text-xs font-medium ${
-                stat.isPositive ? "text-emerald-400" : "text-rose-400"
+                stat.isPositive ? "text-emerald-500" : "text-rose-500"
               }`}
             >
               {stat.change}

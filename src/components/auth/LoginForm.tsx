@@ -3,12 +3,15 @@
 import {
   ArrowRight,
   Building2,
+  CheckCircle2,
   Eye,
   EyeOff,
   Lock,
   Mail,
+  Phone,
   Shield,
   Truck,
+  User,
   UserRound,
 } from "lucide-react";
 import Link from "next/link";
@@ -48,22 +51,34 @@ const roles = [
 
 export default function LoginForm() {
   const router = useRouter();
+  const [authMode, setAuthMode] = useState<"login" | "register">("login");
   const [selectedRole, setSelectedRole] = useState("admin");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [agreeTerms, setAgreeTerms] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [registerSuccess, setRegisterSuccess] = useState(false);
+
+  // Login Controlled State
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+
+  // Register Controlled State
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const activeRoleObj =
     roles.find((role) => role.id === selectedRole) ?? roles[0];
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleLoginSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsSubmitting(true);
-
-    console.log({
-      selectedRole,
-      rememberMe,
-    });
+    setErrorMessage("");
 
     setTimeout(() => {
       setIsSubmitting(false);
@@ -71,25 +86,100 @@ export default function LoginForm() {
     }, 450);
   };
 
+  const handleRegisterSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setErrorMessage("");
+
+    if (password !== confirmPassword) {
+      setErrorMessage("Passwords do not match. Please verify and try again.");
+      return;
+    }
+
+    if (!agreeTerms) {
+      setErrorMessage("Please agree to the Terms of Service to create an account.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setRegisterSuccess(true);
+      setTimeout(() => {
+        setRegisterSuccess(false);
+        setAuthMode("login");
+      }, 1500);
+    }, 600);
+  };
+
   return (
-    <div className="w-full max-w-[390px] mx-auto">
+    <div className="w-full max-w-[400px] mx-auto">
+      {/* Mode Switcher Tabs */}
+      <div className="mb-4 flex rounded-xl border border-border bg-muted/60 p-1">
+        <button
+          type="button"
+          onClick={() => {
+            setAuthMode("login");
+            setErrorMessage("");
+          }}
+          className={`flex-1 rounded-lg py-1.5 text-xs font-semibold transition-all cursor-pointer ${
+            authMode === "login"
+              ? "bg-[#FFA500] text-[#071522] shadow-sm"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          Sign In
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setAuthMode("register");
+            setErrorMessage("");
+          }}
+          className={`flex-1 rounded-lg py-1.5 text-xs font-semibold transition-all cursor-pointer ${
+            authMode === "register"
+              ? "bg-[#FFA500] text-[#071522] shadow-sm"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          Create Account
+        </button>
+      </div>
+
+      {/* Registration Success Banner */}
+      {registerSuccess && (
+        <div className="mb-4 flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-xs text-emerald-500 animate-in fade-in">
+          <CheckCircle2 size={18} className="shrink-0" />
+          <span>Account created successfully! Redirecting to sign in...</span>
+        </div>
+      )}
+
+      {/* Error Banner */}
+      {errorMessage && (
+        <div className="mb-3 rounded-xl border border-destructive/30 bg-destructive/10 p-2.5 text-xs text-destructive">
+          {errorMessage}
+        </div>
+      )}
+
       {/* Header */}
-      <div className="mb-4 text-center sm:text-left">
-        <h1 className="text-xl sm:text-[22px] font-bold tracking-tight text-[#E8EEF5]">
-          Sign in to your account
+      <div className="mb-3.5 text-center sm:text-left">
+        <h1 className="text-xl sm:text-[22px] font-bold tracking-tight text-foreground">
+          {authMode === "login" ? "Sign in to your account" : "Create an Account"}
         </h1>
-        <p className="mt-0.5 text-xs text-[#7E97B0]">
-          Chemical & Water Transport Management Portal
+        <p className="mt-0.5 text-xs text-muted-foreground">
+          {authMode === "login"
+            ? "Chemical & Water Transport Management Portal"
+            : "Join FluidLogix Transport & Logistics Network"}
         </p>
       </div>
 
       {/* Role Selection */}
       <div className="mb-3.5">
         <div className="flex items-center justify-between mb-1.5">
-          <label className="text-[11px] font-semibold uppercase tracking-wider text-[#7E97B0]">
-            Sign in as
+          <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+            {authMode === "login" ? "Sign in as" : "Account Role"}
           </label>
-          <span className="text-[11px] font-medium text-[#FFA500]">
+          <span className="text-[11px] font-semibold text-[#FFA500]">
             {activeRoleObj.roleTitle}
           </span>
         </div>
@@ -104,22 +194,25 @@ export default function LoginForm() {
                 key={role.id}
                 type="button"
                 onClick={() => setSelectedRole(role.id)}
-                className={`group relative flex flex-col items-center justify-center py-2 px-1 rounded-xl border transition-all duration-150 cursor-pointer ${active
+                className={`group relative flex flex-col items-center justify-center py-2 px-1 rounded-xl border transition-all duration-150 cursor-pointer ${
+                  active
                     ? "border-[#FFA500] bg-[#FFA500]/10 text-[#FFA500] shadow-[0_0_12px_rgba(255,165,0,0.12)] ring-1 ring-[#FFA500]/30"
-                    : "border-[#1A3042] bg-[#0B1A28]/60 text-[#67829E] hover:border-[#2C4863] hover:bg-[#0D2235] hover:text-[#C5D5E6]"
-                  }`}
+                    : "border-border bg-card/60 text-muted-foreground hover:border-primary/50 hover:bg-muted hover:text-foreground"
+                }`}
               >
                 <Icon
                   size={17}
-                  className={`mb-0.5 transition-transform group-hover:scale-110 ${active ? "text-[#FFA500]" : "text-[#7891A8]"
-                    }`}
+                  className={`mb-0.5 transition-transform group-hover:scale-110 ${
+                    active ? "text-[#FFA500]" : "text-muted-foreground"
+                  }`}
                 />
                 <span className="text-[11px] font-semibold tracking-tight leading-tight">
                   {role.label}
                 </span>
                 <span
-                  className={`text-[9px] truncate max-w-full tracking-tighter ${active ? "text-[#FFA500]/80" : "text-[#526D87]"
-                    }`}
+                  className={`text-[9px] truncate max-w-full tracking-tighter ${
+                    active ? "text-[#FFA500]/80" : "text-muted-foreground/80"
+                  }`}
                 >
                   {role.desc}
                 </span>
@@ -129,125 +222,322 @@ export default function LoginForm() {
         </div>
       </div>
 
-      {/* Form */}
-      <form onSubmit={handleSubmit} className="space-y-3">
-        {/* Email */}
-        <div>
-          <label
-            htmlFor="email"
-            className="block text-xs font-medium text-[#94A9BE] mb-1"
-          >
-            Email Address
-          </label>
+      {/* Form Content */}
+      {authMode === "login" ? (
+        /* ================= SIGN IN FORM ================= */
+        <form key="login-form" onSubmit={handleLoginSubmit} className="space-y-3">
+          {/* Email */}
+          <div>
+            <label
+              htmlFor="login-email"
+              className="block text-xs font-medium text-foreground mb-1"
+            >
+              Email Address
+            </label>
 
-          <div className="relative group">
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#57728D] transition group-focus-within:text-[#FFA500]">
-              <Mail size={15} />
-            </div>
+            <div className="relative group">
+              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground transition group-focus-within:text-[#FFA500]">
+                <Mail size={15} />
+              </div>
 
-            <input
-              id="email"
-              name="email"
-              type="email"
-              placeholder={
-                selectedRole === "admin"
-                  ? "admin@fluidlogix.com"
-                  : selectedRole === "owner"
+              <input
+                key="input-login-email"
+                id="login-email"
+                name="email"
+                type="email"
+                value={loginEmail ?? ""}
+                onChange={(e) => setLoginEmail(e.target.value)}
+                placeholder={
+                  selectedRole === "admin"
+                    ? "admin@fluidlogix.com"
+                    : selectedRole === "owner"
                     ? "owner@fleetcorp.com"
                     : selectedRole === "driver"
-                      ? "driver@fluidlogix.com"
-                      : "partner@logistics.com"
-              }
-              autoComplete="email"
-              required
-              className="h-10 w-full rounded-lg border border-[#1E344A] bg-[#0B1A28]/90 pl-9 pr-3 text-xs sm:text-sm text-[#E8EEF5] outline-none placeholder:text-[#4A647E] transition focus:border-[#FFA500] focus:bg-[#0D2032] focus:ring-1 focus:ring-[#FFA500]/30"
-            />
-          </div>
-        </div>
-
-        {/* Password */}
-        <div>
-          <div className="flex items-center justify-between mb-1">
-            <label
-              htmlFor="password"
-              className="block text-xs font-medium text-[#94A9BE]"
-            >
-              Password
-            </label>
-            <Link
-              href="/forgot-password"
-              className="text-[11px] text-[#FFA500] transition hover:text-[#FFB938] hover:underline"
-            >
-              Forgot password?
-            </Link>
+                    ? "driver@fluidlogix.com"
+                    : "partner@logistics.com"
+                }
+                autoComplete="email"
+                required
+                className="h-10 w-full rounded-lg border border-border bg-background pl-9 pr-3 text-xs sm:text-sm text-foreground outline-none placeholder:text-muted-foreground transition focus:border-[#FFA500] focus:ring-1 focus:ring-[#FFA500]/30"
+              />
+            </div>
           </div>
 
-          <div className="relative group">
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#57728D] transition group-focus-within:text-[#FFA500]">
-              <Lock size={15} />
+          {/* Password */}
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <label
+                htmlFor="login-password"
+                className="block text-xs font-medium text-foreground"
+              >
+                Password
+              </label>
+              <Link
+                href="/forgot-password"
+                className="text-[11px] font-medium text-[#FFA500] transition hover:text-[#FFB938] hover:underline"
+              >
+                Forgot password?
+              </Link>
             </div>
 
-            <input
-              id="password"
-              name="password"
-              type={showPassword ? "text" : "password"}
-              placeholder="••••••••••••"
-              autoComplete="current-password"
-              required
-              className="h-10 w-full rounded-lg border border-[#1E344A] bg-[#0B1A28]/90 pl-9 pr-10 text-xs sm:text-sm text-[#E8EEF5] outline-none placeholder:text-[#4A647E] transition focus:border-[#FFA500] focus:bg-[#0D2032] focus:ring-1 focus:ring-[#FFA500]/30"
-            />
+            <div className="relative group">
+              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground transition group-focus-within:text-[#FFA500]">
+                <Lock size={15} />
+              </div>
 
+              <input
+                key="input-login-password"
+                id="login-password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                value={loginPassword ?? ""}
+                onChange={(e) => setLoginPassword(e.target.value)}
+                placeholder="••••••••••••"
+                autoComplete="current-password"
+                required
+                className="h-10 w-full rounded-lg border border-border bg-background pl-9 pr-10 text-xs sm:text-sm text-foreground outline-none placeholder:text-muted-foreground transition focus:border-[#FFA500] focus:ring-1 focus:ring-[#FFA500]/30"
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword((value) => !value)}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-foreground cursor-pointer p-1"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+              </button>
+            </div>
+          </div>
+
+          {/* Remember me */}
+          <div className="flex items-center">
+            <label className="flex cursor-pointer select-none items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition">
+              <input
+                key="input-login-remember"
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(event) => setRememberMe(event.target.checked)}
+                className="h-3.5 w-3.5 rounded border-border bg-background accent-[#FFA500] cursor-pointer"
+              />
+              <span>Keep me signed in on this device</span>
+            </label>
+          </div>
+
+          {/* Submit */}
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="group relative w-full h-10 rounded-lg bg-gradient-to-r from-[#FFA500] to-[#FF8C00] text-[#071522] font-semibold text-xs sm:text-sm tracking-wide transition-all duration-150 hover:from-[#FFB21D] hover:to-[#FFA500] hover:shadow-[0_0_16px_rgba(255,165,0,0.25)] active:scale-[0.99] flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-orange-500/15 disabled:opacity-75"
+          >
+            <span>
+              {isSubmitting
+                ? "Signing in..."
+                : `Sign In as ${activeRoleObj.label}`}
+            </span>
+            <ArrowRight
+              size={15}
+              className="transition-transform duration-150 group-hover:translate-x-1"
+            />
+          </button>
+        </form>
+      ) : (
+        /* ================= CREATE ACCOUNT FORM ================= */
+        <form key="register-form" onSubmit={handleRegisterSubmit} className="space-y-2.5">
+          {/* Full Name */}
+          <div>
+            <label className="block text-xs font-medium text-foreground mb-1">
+              Full Name
+            </label>
+            <div className="relative group">
+              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground transition group-focus-within:text-[#FFA500]">
+                <User size={15} />
+              </div>
+              <input
+                key="input-reg-name"
+                type="text"
+                value={fullName ?? ""}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder="e.g. Ramesh Kumar"
+                required
+                className="h-9.5 w-full rounded-lg border border-border bg-background pl-9 pr-3 text-xs text-foreground outline-none placeholder:text-muted-foreground transition focus:border-[#FFA500] focus:ring-1 focus:ring-[#FFA500]/30"
+              />
+            </div>
+          </div>
+
+          {/* Email & Phone side-by-side on sm screens */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div>
+              <label className="block text-xs font-medium text-foreground mb-1">
+                Email Address
+              </label>
+              <div className="relative group">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground transition group-focus-within:text-[#FFA500]">
+                  <Mail size={14} />
+                </div>
+                <input
+                  key="input-reg-email"
+                  type="email"
+                  value={email ?? ""}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@domain.com"
+                  required
+                  className="h-9.5 w-full rounded-lg border border-border bg-background pl-8.5 pr-2.5 text-xs text-foreground outline-none placeholder:text-muted-foreground transition focus:border-[#FFA500] focus:ring-1 focus:ring-[#FFA500]/30"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium text-foreground mb-1">
+                Phone Number
+              </label>
+              <div className="relative group">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground transition group-focus-within:text-[#FFA500]">
+                  <Phone size={14} />
+                </div>
+                <input
+                  key="input-reg-phone"
+                  type="tel"
+                  value={phone ?? ""}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="+91 98765 43210"
+                  required
+                  className="h-9.5 w-full rounded-lg border border-border bg-background pl-8.5 pr-2.5 text-xs text-foreground outline-none placeholder:text-muted-foreground transition focus:border-[#FFA500] focus:ring-1 focus:ring-[#FFA500]/30"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Password & Confirm Password */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div>
+              <label className="block text-xs font-medium text-foreground mb-1">
+                Password
+              </label>
+              <div className="relative group">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground transition group-focus-within:text-[#FFA500]">
+                  <Lock size={14} />
+                </div>
+                <input
+                  key="input-reg-password"
+                  type={showPassword ? "text" : "password"}
+                  value={password ?? ""}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  minLength={6}
+                  className="h-9.5 w-full rounded-lg border border-border bg-background pl-8.5 pr-8 text-xs text-foreground outline-none placeholder:text-muted-foreground transition focus:border-[#FFA500] focus:ring-1 focus:ring-[#FFA500]/30"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
+                >
+                  {showPassword ? <EyeOff size={13} /> : <Eye size={13} />}
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium text-foreground mb-1">
+                Confirm Password
+              </label>
+              <div className="relative group">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground transition group-focus-within:text-[#FFA500]">
+                  <Lock size={14} />
+                </div>
+                <input
+                  key="input-reg-confirmpassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  value={confirmPassword ?? ""}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  minLength={6}
+                  className="h-9.5 w-full rounded-lg border border-border bg-background pl-8.5 pr-8 text-xs text-foreground outline-none placeholder:text-muted-foreground transition focus:border-[#FFA500] focus:ring-1 focus:ring-[#FFA500]/30"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
+                >
+                  {showConfirmPassword ? <EyeOff size={13} /> : <Eye size={13} />}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Agree Terms Checkbox */}
+          <div className="flex items-center pt-0.5">
+            <label className="flex cursor-pointer select-none items-center gap-2 text-[11px] text-muted-foreground hover:text-foreground transition">
+              <input
+                key="input-reg-agree"
+                type="checkbox"
+                checked={agreeTerms}
+                onChange={(e) => setAgreeTerms(e.target.checked)}
+                required
+                className="h-3.5 w-3.5 rounded border-border bg-background accent-[#FFA500] cursor-pointer"
+              />
+              <span>
+                I agree to FluidLogix{" "}
+                <span className="text-[#FFA500] underline">Terms of Service</span>
+              </span>
+            </label>
+          </div>
+
+          {/* Create Account Submit */}
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="group relative w-full h-10 mt-1 rounded-lg bg-gradient-to-r from-[#FFA500] to-[#FF8C00] text-[#071522] font-semibold text-xs sm:text-sm tracking-wide transition-all duration-150 hover:from-[#FFB21D] hover:to-[#FFA500] hover:shadow-[0_0_16px_rgba(255,165,0,0.25)] active:scale-[0.99] flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-orange-500/15 disabled:opacity-75"
+          >
+            <span>
+              {isSubmitting
+                ? "Creating Account..."
+                : `Create Account as ${activeRoleObj.label}`}
+            </span>
+            <ArrowRight
+              size={15}
+              className="transition-transform duration-150 group-hover:translate-x-1"
+            />
+          </button>
+        </form>
+      )}
+
+      {/* Registration & Account Toggle */}
+      <div className="mt-4 pt-3 border-t border-border text-center text-xs text-muted-foreground">
+        {authMode === "login" ? (
+          <>
+            <span>New to FluidLogix? </span>
             <button
               type="button"
-              onClick={() => setShowPassword((value) => !value)}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#57728D] transition hover:text-[#E8EEF5] cursor-pointer p-1"
-              aria-label={showPassword ? "Hide password" : "Show password"}
+              onClick={() => {
+                setAuthMode("register");
+                setErrorMessage("");
+              }}
+              className="font-semibold text-[#FFA500] transition hover:text-[#FFB938] hover:underline cursor-pointer"
             >
-              {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+              Create account
             </button>
-          </div>
-        </div>
-
-        {/* Remember me */}
-        <div className="flex items-center">
-          <label className="flex cursor-pointer select-none items-center gap-2 text-xs text-[#829BB3] hover:text-[#C5D5E6] transition">
-            <input
-              type="checkbox"
-              checked={rememberMe}
-              onChange={(event) => setRememberMe(event.target.checked)}
-              className="h-3.5 w-3.5 rounded border-[#1E344A] bg-[#0B1A28] accent-[#FFA500] cursor-pointer"
-            />
-            <span>Keep me signed in on this device</span>
-          </label>
-        </div>
-
-        {/* Submit */}
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="group relative w-full h-10 rounded-lg bg-gradient-to-r from-[#FFA500] to-[#FF8C00] text-[#071522] font-semibold text-xs sm:text-sm tracking-wide transition-all duration-150 hover:from-[#FFB21D] hover:to-[#FFA500] hover:shadow-[0_0_16px_rgba(255,165,0,0.25)] active:scale-[0.99] flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-orange-500/15 disabled:opacity-75"
-        >
-          <span>{isSubmitting ? "Signing in..." : `Sign In as ${activeRoleObj.label}`}</span>
-          <ArrowRight
-            size={15}
-            className="transition-transform duration-150 group-hover:translate-x-1"
-          />
-        </button>
-      </form>
-
-      {/* Registration & Account Support */}
-      <div className="mt-4 pt-3.5 border-t border-[#16293B] text-center text-xs text-[#637F9C]">
-        <span>New to FluidLogix? </span>
-        <Link
-          href="/register"
-          className="font-medium text-[#FFA500] transition hover:text-[#FFB938] hover:underline"
-        >
-          Create account
-        </Link>
-        <span className="mx-2 text-[#243B50]">·</span>
+          </>
+        ) : (
+          <>
+            <span>Already have an account? </span>
+            <button
+              type="button"
+              onClick={() => {
+                setAuthMode("login");
+                setErrorMessage("");
+              }}
+              className="font-semibold text-[#FFA500] transition hover:text-[#FFB938] hover:underline cursor-pointer"
+            >
+              Sign in
+            </button>
+          </>
+        )}
+        <span className="mx-2 text-muted-foreground">·</span>
         <Link
           href="/verify-account"
-          className="font-medium text-[#829BB3] transition hover:text-[#E8EEF5] hover:underline"
+          className="font-medium text-muted-foreground transition hover:text-foreground hover:underline"
         >
           Verify account
         </Link>

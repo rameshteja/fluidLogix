@@ -33,8 +33,8 @@ function CustomChartTooltip({ active, payload, label }: CustomTooltipProps) {
   if (active && payload && payload.length) {
     const dataItem = payload[0].payload;
     return (
-      <div className="rounded-xl border border-[#1F3E5C] bg-[#071728]/95 px-3.5 py-2.5 text-xs shadow-2xl backdrop-blur-md z-30">
-        <div className="font-semibold text-[#F1F5F9] mb-1.5 pb-1 border-b border-[#14283C]">
+      <div className="rounded-xl border border-border bg-popover text-popover-foreground px-3.5 py-2.5 text-xs shadow-2xl backdrop-blur-md z-30">
+        <div className="font-semibold text-foreground mb-1.5 pb-1 border-b border-border">
           {label}
         </div>
         <div className="flex items-center gap-2 text-[#FFA500] font-medium">
@@ -60,14 +60,14 @@ export default function RevenueTrendChart() {
   }, []);
 
   return (
-    <div className="relative rounded-2xl border border-[#14293C] bg-[#0A1A2B] p-4 sm:p-5 transition hover:border-[#1E3E5B]">
+    <div className="relative rounded-2xl border border-border bg-card p-4 sm:p-5 transition hover:border-primary/40 text-card-foreground shadow-sm">
       {/* Header & Controls */}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <div>
-          <h2 className="text-base font-bold text-[#F1F5F9] leading-snug">
+          <h2 className="text-base font-bold text-foreground leading-snug">
             Revenue & Trip Trend
           </h2>
-          <p className="text-xs text-[#5E7995]">
+          <p className="text-xs text-muted-foreground">
             Dynamic monthly performance metrics
           </p>
         </div>
@@ -75,24 +75,24 @@ export default function RevenueTrendChart() {
         <div className="flex items-center gap-3">
           {/* Legend */}
           <div className="hidden sm:flex items-center gap-3 text-xs font-medium mr-2">
-            <div className="flex items-center gap-1.5 text-[#94A9BE]">
+            <div className="flex items-center gap-1.5 text-muted-foreground">
               <span className="h-2 w-2 rounded-full bg-[#FFA500]" />
               <span>Revenue (₹K)</span>
             </div>
-            <div className="flex items-center gap-1.5 text-[#94A9BE]">
+            <div className="flex items-center gap-1.5 text-muted-foreground">
               <span className="h-2 w-2 rounded-full bg-[#38BDF8]" />
               <span>Trips</span>
             </div>
           </div>
 
           {/* Range Selector Pill Switch */}
-          <div className="flex items-center rounded-lg border border-[#162D42] bg-[#071522] p-0.5 text-xs">
+          <div className="flex items-center rounded-lg border border-border bg-muted/50 p-0.5 text-xs">
             <button
               onClick={() => setRange("6m")}
               className={`px-2.5 py-1 rounded-md font-medium transition-colors cursor-pointer ${
                 range === "6m"
                   ? "bg-[#FFA500] text-[#071522] shadow-sm font-semibold"
-                  : "text-[#6A86A2] hover:text-[#E8EEF5]"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               6 Months
@@ -102,7 +102,7 @@ export default function RevenueTrendChart() {
               className={`px-2.5 py-1 rounded-md font-medium transition-colors cursor-pointer ${
                 range === "1y"
                   ? "bg-[#FFA500] text-[#071522] shadow-sm font-semibold"
-                  : "text-[#6A86A2] hover:text-[#E8EEF5]"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               1 Year
@@ -136,23 +136,23 @@ export default function RevenueTrendChart() {
 
               <CartesianGrid
                 strokeDasharray="3 3"
-                stroke="#14283C"
+                stroke="var(--border)"
                 vertical={false}
               />
 
               <XAxis
                 dataKey="month"
-                stroke="#4A657F"
+                stroke="var(--muted-foreground)"
                 tickLine={false}
                 axisLine={false}
-                tick={{ fontSize: 11, fill: "#5E7995" }}
+                tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
               />
 
               <YAxis
-                stroke="#4A657F"
+                stroke="var(--muted-foreground)"
                 tickLine={false}
                 axisLine={false}
-                tick={{ fontSize: 10, fill: "#4A657F" }}
+                tick={{ fontSize: 10, fill: "var(--muted-foreground)" }}
                 domain={[0, "auto"]}
               />
 
@@ -166,7 +166,7 @@ export default function RevenueTrendChart() {
                 strokeWidth={2.5}
                 fillOpacity={1}
                 fill="url(#colorRevenue)"
-                activeDot={{ r: 5, fill: "#FFA500", stroke: "#071522", strokeWidth: 2 }}
+                activeDot={{ r: 5, fill: "#FFA500", stroke: "var(--card)", strokeWidth: 2 }}
               />
 
               <Area
@@ -177,7 +177,7 @@ export default function RevenueTrendChart() {
                 strokeWidth={2.2}
                 fillOpacity={1}
                 fill="url(#colorTrips)"
-                activeDot={{ r: 5, fill: "#38BDF8", stroke: "#071522", strokeWidth: 2 }}
+                activeDot={{ r: 5, fill: "#38BDF8", stroke: "var(--card)", strokeWidth: 2 }}
               />
             </AreaChart>
           </ResponsiveContainer>

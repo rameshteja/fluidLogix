@@ -2,26 +2,26 @@
 
 :root {
   --font-size: 16px;
-  --background: #0b1622;
-  --foreground: #e2e8f0;
-  --card: #0f1f30;
-  --card-foreground: #e2e8f0;
-  --popover: #0f1f30;
-  --popover-foreground: #e2e8f0;
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
   --primary: #f59e0b;
   --primary-foreground: #0b1622;
-  --secondary: #1d3a5c;
-  --secondary-foreground: #93c5fd;
-  --muted: #162234;
+  --secondary: #e2e8f0;
+  --secondary-foreground: #1e293b;
+  --muted: #f1f5f9;
   --muted-foreground: #64748b;
-  --accent: #38bdf8;
-  --accent-foreground: #0b1622;
+  --accent: #0284c7;
+  --accent-foreground: #ffffff;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --border: rgba(255, 255, 255, 0.07);
-  --input: transparent;
-  --input-background: #162234;
-  --switch-background: #1d3a5c;
+  --border: #e2e8f0;
+  --input: #ffffff;
+  --input-background: #f1f5f9;
+  --switch-background: #cbd5e1;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
   --ring: rgba(245, 158, 11, 0.4);
@@ -31,13 +31,52 @@
   --chart-4: #ef4444;
   --chart-5: #a78bfa;
   --radius: 0.75rem;
-  --sidebar: #0f1f30;
-  --sidebar-foreground: #e2e8f0;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #0f172a;
   --sidebar-primary: #f59e0b;
   --sidebar-primary-foreground: #0b1622;
-  --sidebar-accent: #162234;
-  --sidebar-accent-foreground: #e2e8f0;
-  --sidebar-border: rgba(255, 255, 255, 0.07);
+  --sidebar-accent: #f1f5f9;
+  --sidebar-accent-foreground: #0f172a;
+  --sidebar-border: #e2e8f0;
+  --sidebar-ring: rgba(245, 158, 11, 0.4);
+}
+
+.light {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --primary: #f59e0b;
+  --primary-foreground: #0b1622;
+  --secondary: #e2e8f0;
+  --secondary-foreground: #1e293b;
+  --muted: #f1f5f9;
+  --muted-foreground: #475569;
+  --accent: #0284c7;
+  --accent-foreground: #ffffff;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #cbd5e1;
+  --input: #ffffff;
+  --input-background: #f1f5f9;
+  --switch-background: #cbd5e1;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: rgba(245, 158, 11, 0.4);
+  --chart-1: #f59e0b;
+  --chart-2: #38bdf8;
+  --chart-3: #10b981;
+  --chart-4: #ef4444;
+  --chart-5: #a78bfa;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #0f172a;
+  --sidebar-primary: #f59e0b;
+  --sidebar-primary-foreground: #0b1622;
+  --sidebar-accent: #f1f5f9;
+  --sidebar-accent-foreground: #0f172a;
+  --sidebar-border: #e2e8f0;
   --sidebar-ring: rgba(245, 158, 11, 0.4);
 }
 
@@ -60,6 +99,8 @@
   --destructive-foreground: #ffffff;
   --border: rgba(255, 255, 255, 0.07);
   --input: #162234;
+  --input-background: #162234;
+  --switch-background: #1d3a5c;
   --ring: rgba(245, 158, 11, 0.4);
   --font-weight-medium: 500;
   --font-weight-normal: 400;
@@ -208,7 +249,7 @@ a {
    ========================================================================== */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #1c3b58 #071522;
+  scrollbar-color: var(--border) var(--muted);
 }
 
 /* Chrome, Edge, and Safari WebKit Scrollbars */
@@ -218,29 +259,29 @@ a {
 }
 
 ::-webkit-scrollbar-track {
-  background: #071522;
+  background: var(--muted);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1c3b58;
+  background: var(--border);
   border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
   transition: background-color 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #2b567d;
+  background: var(--primary);
 }
 
 ::-webkit-scrollbar-corner {
-  background: #071522;
+  background: var(--muted);
 }
 
 /* Custom Reusable Scrollbar Utility Classes */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: #1c3b58 #071522;
+  scrollbar-color: var(--border) var(--muted);
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -249,17 +290,17 @@ a {
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: #071522;
+  background: var(--muted);
   border-radius: 8px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #1c3b58;
+  background: var(--border);
   border-radius: 8px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #ffa500;
+  background: var(--primary);
 }
 
 /* for image slider in hero section */

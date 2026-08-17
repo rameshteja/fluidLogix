@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import LoginForm from "@/components/auth/LoginForm";
+import ThemeToggle from "@/components/theme/ThemeToggle";
 
 const keyHighlights = [
   {
@@ -30,18 +31,17 @@ const keyHighlights = [
 
 export default function LoginPage() {
   return (
-    <main className="min-h-screen bg-[#071522] text-[#E8EEF5] antialiased selection:bg-[#FFA500] selection:text-[#071522]">
+    <main className="min-h-screen bg-background text-foreground antialiased selection:bg-[#FFA500] selection:text-[#071522] transition-colors duration-200">
       <div className="flex min-h-screen flex-col lg:grid lg:h-screen lg:grid-cols-12 lg:overflow-hidden">
 
         {/* =====================================================
             LEFT PANEL - Visual Brand Showcase (Desktop)
         ====================================================== */}
-        <section className="relative hidden flex-col justify-between overflow-hidden border-r border-[#142637] bg-gradient-to-b from-[#091827] via-[#0B1D2F] to-[#071522] p-6 lg:col-span-6 lg:flex xl:p-10 2xl:p-12">
+        <section className="relative hidden flex-col justify-between overflow-hidden border-r border-border bg-card p-6 lg:col-span-6 lg:flex xl:p-10 2xl:p-12 text-card-foreground">
 
-          {/* Subtle Ambient Glows & Grid Pattern */}
+          {/* Subtle Ambient Glows */}
           <div className="pointer-events-none absolute -left-20 -top-20 h-72 w-72 rounded-full bg-[#FFA500]/10 blur-[80px]" />
           <div className="pointer-events-none absolute -bottom-20 -right-20 h-72 w-72 rounded-full bg-[#00AEEF]/5 blur-[80px]" />
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(#1A324A_1px,transparent_1px)] [background-size:24px_24px] opacity-25" />
 
           {/* Top Brand Bar */}
           <div className="relative z-10 flex items-center justify-between">
@@ -54,19 +54,22 @@ export default function LoginPage() {
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="text-lg font-bold tracking-tight text-[#F1F5F9]">
+                <span className="text-lg font-bold tracking-tight text-foreground">
                   FluidLogix
                 </span>
               </div>
             </Link>
 
-            <Link
-              href="/"
-              className="inline-flex items-center gap-1.5 rounded-lg border border-[#1B3248] bg-[#0C1F31]/80 px-2.5 py-1 text-xs font-medium text-[#7D98B3] backdrop-blur transition hover:border-[#2C4A68] hover:bg-[#122A40] hover:text-[#E8EEF5]"
-            >
-              <ArrowLeft size={13} />
-              <span>Back to home</span>
-            </Link>
+            <div className="flex items-center gap-3">
+              <ThemeToggle align="right" />
+              <Link
+                href="/"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-muted/60 px-3 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur transition hover:bg-muted hover:text-foreground"
+              >
+                <ArrowLeft size={13} />
+                <span>Back to home</span>
+              </Link>
+            </div>
           </div>
 
           {/* Center Showcase Content */}
@@ -79,7 +82,7 @@ export default function LoginPage() {
             </div>
 
             {/* Headline */}
-            <h2 className="text-2xl font-bold tracking-tight text-[#F1F5F9] sm:text-3xl leading-tight">
+            <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl leading-tight">
               Water & Chemical Transport
               <br />
               <span className="bg-gradient-to-r from-[#FFA500] via-[#FFB733] to-[#FF8C00] bg-clip-text text-transparent">
@@ -87,7 +90,7 @@ export default function LoginPage() {
               </span>
             </h2>
 
-            <p className="mt-2 text-xs leading-relaxed text-[#7590AA] xl:text-sm max-w-md">
+            <p className="mt-2 text-xs leading-relaxed text-muted-foreground xl:text-sm max-w-md">
               Unified portal for fleet owners, drivers, and transport partners to coordinate tanker dispatches, load tonnages, and automated billing.
             </p>
 
@@ -98,16 +101,16 @@ export default function LoginPage() {
                 return (
                   <div
                     key={item.title}
-                    className="flex items-center gap-3 rounded-xl border border-[#152B3E] bg-[#0A1A2A]/70 px-3 py-2 backdrop-blur transition hover:border-[#1F3E5A] hover:bg-[#0D2235]"
+                    className="flex items-center gap-3 rounded-xl border border-border bg-background/70 px-3 py-2.5 backdrop-blur transition hover:bg-muted/50"
                   >
                     <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#FFA500]/10 text-[#FFA500] border border-[#FFA500]/20">
                       <Icon size={14} />
                     </div>
                     <div>
-                      <h3 className="text-xs font-semibold text-[#E2E8F0] leading-tight">
+                      <h3 className="text-xs font-semibold text-foreground leading-tight">
                         {item.title}
                       </h3>
-                      <p className="text-[10px] text-[#63809C] mt-0.5">
+                      <p className="text-[10px] text-muted-foreground mt-0.5">
                         {item.desc}
                       </p>
                     </div>
@@ -121,7 +124,7 @@ export default function LoginPage() {
         {/* =====================================================
             RIGHT PANEL - Authentication Form
         ====================================================== */}
-        <section className="relative flex min-h-screen flex-1 flex-col justify-center px-4 py-6 sm:px-6 lg:col-span-6 lg:h-screen lg:min-h-0 lg:p-6 xl:p-8">
+        <section className="relative flex min-h-screen flex-1 flex-col justify-center px-4 py-6 sm:px-6 lg:col-span-6 lg:h-screen lg:min-h-0 lg:p-6 xl:p-8 bg-background text-foreground">
 
           {/* Subtle Ambient Radial Glow */}
           <div className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 h-80 w-80 rounded-full bg-[#FFA500]/5 blur-[100px]" />
@@ -132,18 +135,21 @@ export default function LoginPage() {
               <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-[#FFA500] to-[#FF8C00] text-[#071522] shadow-sm shadow-orange-500/20">
                 <Droplets size={16} className="stroke-[2.5]" />
               </div>
-              <span className="text-base font-bold tracking-tight text-[#F1F5F9]">
+              <span className="text-base font-bold tracking-tight text-foreground">
                 FluidLogix
               </span>
             </Link>
 
-            <Link
-              href="/"
-              className="inline-flex items-center gap-1 text-xs font-medium text-[#7D98B3] transition hover:text-[#FFA500]"
-            >
-              <ArrowLeft size={12} />
-              <span>Home</span>
-            </Link>
+            <div className="flex items-center gap-2">
+              <ThemeToggle align="right" />
+              <Link
+                href="/"
+                className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition hover:text-[#FFA500]"
+              >
+                <ArrowLeft size={12} />
+                <span>Home</span>
+              </Link>
+            </div>
           </div>
 
           {/* Centered Login Form Card */}
@@ -152,7 +158,7 @@ export default function LoginPage() {
           </div>
 
           {/* Mobile Footer Note */}
-          <div className="relative z-10 mt-3 text-center text-[10px] text-[#4A647E] lg:hidden">
+          <div className="relative z-10 mt-3 text-center text-[10px] text-muted-foreground lg:hidden">
             <span>Secured with JWT authentication & HTTPS encryption</span>
           </div>
 

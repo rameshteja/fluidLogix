@@ -102,28 +102,28 @@ export default function EditVehicleModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
       {/* Modal Dialog Card */}
-      <div className="relative w-full max-w-2xl overflow-hidden rounded-2xl border border-[#1A344D] bg-[#0A1A2B] shadow-2xl z-10 max-h-[90vh] flex flex-col animate-in fade-in zoom-in-95 duration-150">
+      <div className="relative w-full max-w-2xl overflow-hidden rounded-2xl border border-border bg-card text-card-foreground shadow-2xl z-10 max-h-[90vh] flex flex-col animate-in fade-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-[#142637] px-6 py-4 bg-[#081523]">
+        <div className="flex items-center justify-between border-b border-border px-6 py-4 bg-muted/40">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#00AEEF]/10 text-[#00AEEF] border border-[#00AEEF]/20">
               <Edit3 size={18} />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base font-bold text-[#F1F5F9] leading-tight">
+                <h2 className="text-base font-bold text-foreground leading-tight">
                   Edit Vehicle Details
                 </h2>
                 <span className="font-mono text-xs font-bold text-[#FFA500] bg-[#FFA500]/10 px-2 py-0.5 rounded border border-[#FFA500]/20">
                   {vehicle.id}
                 </span>
               </div>
-              <p className="text-xs text-[#5E7995]">
+              <p className="text-xs text-muted-foreground">
                 Update tanker specifications, driver & status
               </p>
             </div>
@@ -131,7 +131,7 @@ export default function EditVehicleModal({
 
           <button
             onClick={onClose}
-            className="rounded-lg p-1.5 text-[#5A7692] hover:bg-[#0E2337] hover:text-[#F1F5F9] transition cursor-pointer"
+            className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground transition cursor-pointer"
           >
             <X size={18} />
           </button>
@@ -150,30 +150,30 @@ export default function EditVehicleModal({
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {/* Vehicle ID (Read only) */}
             <div>
-              <label className="block text-xs font-semibold text-[#8DA6BE] mb-1">
+              <label className="block text-xs font-semibold text-foreground/80 mb-1">
                 Vehicle ID
               </label>
               <input
                 type="text"
                 disabled
-                value={formData.id}
-                className="h-9 w-full rounded-lg border border-[#1A324A] bg-[#071522]/50 px-3 text-xs font-mono font-bold text-[#FFA500] outline-none cursor-not-allowed opacity-80"
+                value={formData.id ?? ""}
+                className="h-9 w-full rounded-lg border border-border bg-muted/30 px-3 text-xs font-mono font-bold text-[#FFA500] outline-none cursor-not-allowed opacity-80"
               />
             </div>
 
             {/* License Plate Number */}
             <div>
-              <label className="block text-xs font-semibold text-[#8DA6BE] mb-1">
+              <label className="block text-xs font-semibold text-foreground/80 mb-1">
                 Plate Number <span className="text-[#FFA500]">*</span>
               </label>
               <input
                 type="text"
-                value={formData.plateNo}
+                value={formData.plateNo ?? ""}
                 onChange={(e) => handleChange("plateNo", e.target.value.toUpperCase())}
-                className={`h-9 w-full rounded-lg border bg-[#071522] px-3 text-xs font-bold text-[#E8EEF5] outline-none transition ${
+                className={`h-9 w-full rounded-lg border bg-background px-3 text-xs font-bold text-foreground outline-none transition ${
                   errors.plateNo
                     ? "border-rose-500/70 focus:ring-1 focus:ring-rose-500"
-                    : "border-[#1A324A] focus:border-[#FFA500] focus:ring-1 focus:ring-[#FFA500]/30"
+                    : "border-border focus:border-[#FFA500] focus:ring-1 focus:ring-[#FFA500]/30"
                 }`}
               />
               {errors.plateNo && (
@@ -188,13 +188,13 @@ export default function EditVehicleModal({
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {/* Tanker Type */}
             <div>
-              <label className="block text-xs font-semibold text-[#8DA6BE] mb-1">
+              <label className="block text-xs font-semibold text-foreground/80 mb-1">
                 Tanker Type <span className="text-[#FFA500]">*</span>
               </label>
               <select
-                value={formData.tankerType}
+                value={formData.tankerType ?? "Chemical Tanker"}
                 onChange={(e) => handleChange("tankerType", e.target.value as TankerType)}
-                className="h-9 w-full rounded-lg border border-[#1A324A] bg-[#071522] px-3 text-xs text-[#E8EEF5] outline-none focus:border-[#FFA500]"
+                className="h-9 w-full rounded-lg border border-border bg-background px-3 text-xs text-foreground outline-none focus:border-[#FFA500]"
               >
                 <option value="Chemical Tanker">Chemical Tanker</option>
                 <option value="Hazmat Tanker">Hazmat Tanker</option>
@@ -205,7 +205,7 @@ export default function EditVehicleModal({
 
             {/* Capacity in Litres */}
             <div>
-              <label className="block text-xs font-semibold text-[#8DA6BE] mb-1">
+              <label className="block text-xs font-semibold text-foreground/80 mb-1">
                 Capacity (Liters) <span className="text-[#FFA500]">*</span>
               </label>
               <input
@@ -213,12 +213,12 @@ export default function EditVehicleModal({
                 step="500"
                 min="1000"
                 max="60000"
-                value={formData.capacity}
+                value={formData.capacity ?? ""}
                 onChange={(e) => handleChange("capacity", e.target.value)}
-                className={`h-9 w-full rounded-lg border bg-[#071522] px-3 text-xs font-mono text-[#E8EEF5] outline-none transition ${
+                className={`h-9 w-full rounded-lg border bg-background px-3 text-xs font-mono text-foreground outline-none transition ${
                   errors.capacity
                     ? "border-rose-500/70 focus:ring-1 focus:ring-rose-500"
-                    : "border-[#1A324A] focus:border-[#FFA500] focus:ring-1 focus:ring-[#FFA500]/30"
+                    : "border-border focus:border-[#FFA500] focus:ring-1 focus:ring-[#FFA500]/30"
                 }`}
               />
               {errors.capacity && (
@@ -233,17 +233,17 @@ export default function EditVehicleModal({
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {/* Owner Name */}
             <div>
-              <label className="block text-xs font-semibold text-[#8DA6BE] mb-1">
+              <label className="block text-xs font-semibold text-foreground/80 mb-1">
                 Fleet Owner / Transporter <span className="text-[#FFA500]">*</span>
               </label>
               <input
                 type="text"
-                value={formData.owner}
+                value={formData.owner ?? ""}
                 onChange={(e) => handleChange("owner", e.target.value)}
-                className={`h-9 w-full rounded-lg border bg-[#071522] px-3 text-xs text-[#E8EEF5] outline-none transition ${
+                className={`h-9 w-full rounded-lg border bg-background px-3 text-xs text-foreground outline-none transition ${
                   errors.owner
                     ? "border-rose-500/70 focus:ring-1 focus:ring-rose-500"
-                    : "border-[#1A324A] focus:border-[#FFA500] focus:ring-1 focus:ring-[#FFA500]/30"
+                    : "border-border focus:border-[#FFA500] focus:ring-1 focus:ring-[#FFA500]/30"
                 }`}
               />
               {errors.owner && (
@@ -256,17 +256,17 @@ export default function EditVehicleModal({
 
             {/* Driver Name */}
             <div>
-              <label className="block text-xs font-semibold text-[#8DA6BE] mb-1">
+              <label className="block text-xs font-semibold text-foreground/80 mb-1">
                 Assigned Driver <span className="text-[#FFA500]">*</span>
               </label>
               <input
                 type="text"
-                value={formData.driver}
+                value={formData.driver ?? ""}
                 onChange={(e) => handleChange("driver", e.target.value)}
-                className={`h-9 w-full rounded-lg border bg-[#071522] px-3 text-xs text-[#E8EEF5] outline-none transition ${
+                className={`h-9 w-full rounded-lg border bg-background px-3 text-xs text-foreground outline-none transition ${
                   errors.driver
                     ? "border-rose-500/70 focus:ring-1 focus:ring-rose-500"
-                    : "border-[#1A324A] focus:border-[#FFA500] focus:ring-1 focus:ring-[#FFA500]/30"
+                    : "border-border focus:border-[#FFA500] focus:ring-1 focus:ring-[#FFA500]/30"
                 }`}
               />
               {errors.driver && (
@@ -281,13 +281,13 @@ export default function EditVehicleModal({
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             {/* Operating Company */}
             <div>
-              <label className="block text-xs font-semibold text-[#8DA6BE] mb-1">
+              <label className="block text-xs font-semibold text-foreground/80 mb-1">
                 Client / Company <span className="text-[#FFA500]">*</span>
               </label>
               <select
-                value={formData.company}
+                value={formData.company ?? "ChemCorp Ltd"}
                 onChange={(e) => handleChange("company", e.target.value)}
-                className="h-9 w-full rounded-lg border border-[#1A324A] bg-[#071522] px-2.5 text-xs text-[#E8EEF5] outline-none focus:border-[#FFA500]"
+                className="h-9 w-full rounded-lg border border-border bg-background px-2.5 text-xs text-foreground outline-none focus:border-[#FFA500]"
               >
                 <option value="ChemCorp Ltd">ChemCorp Ltd</option>
                 <option value="HazWaste Solutions">HazWaste Solutions</option>
@@ -299,13 +299,13 @@ export default function EditVehicleModal({
 
             {/* Material Classification */}
             <div>
-              <label className="block text-xs font-semibold text-[#8DA6BE] mb-1">
+              <label className="block text-xs font-semibold text-foreground/80 mb-1">
                 Material Classification <span className="text-[#FFA500]">*</span>
               </label>
               <select
-                value={formData.material}
+                value={formData.material ?? "Chemical"}
                 onChange={(e) => handleChange("material", e.target.value as MaterialCategory)}
-                className="h-9 w-full rounded-lg border border-[#1A324A] bg-[#071522] px-2.5 text-xs text-[#E8EEF5] outline-none focus:border-[#FFA500]"
+                className="h-9 w-full rounded-lg border border-border bg-background px-2.5 text-xs text-foreground outline-none focus:border-[#FFA500]"
               >
                 <option value="Chemical">Chemical (Orange)</option>
                 <option value="Hazardous">Hazardous (Red)</option>
@@ -316,13 +316,13 @@ export default function EditVehicleModal({
 
             {/* Operational Status */}
             <div>
-              <label className="block text-xs font-semibold text-[#8DA6BE] mb-1">
+              <label className="block text-xs font-semibold text-foreground/80 mb-1">
                 Operational Status <span className="text-[#FFA500]">*</span>
               </label>
               <select
-                value={formData.status}
+                value={formData.status ?? "Active"}
                 onChange={(e) => handleChange("status", e.target.value as FleetStatus)}
-                className="h-9 w-full rounded-lg border border-[#1A324A] bg-[#071522] px-2.5 text-xs text-[#E8EEF5] outline-none focus:border-[#FFA500]"
+                className="h-9 w-full rounded-lg border border-border bg-background px-2.5 text-xs text-foreground outline-none focus:border-[#FFA500]"
               >
                 <option value="Active">Active (Green)</option>
                 <option value="Transit">Transit (Blue)</option>
@@ -334,26 +334,26 @@ export default function EditVehicleModal({
 
           {/* Current Location */}
           <div>
-            <label className="block text-xs font-semibold text-[#8DA6BE] mb-1">
+            <label className="block text-xs font-semibold text-foreground/80 mb-1">
               Current Location / Route Status
             </label>
             <div className="relative">
-              <MapPin size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#56728D]" />
+              <MapPin size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <input
                 type="text"
-                value={formData.currentLocation}
+                value={formData.currentLocation ?? ""}
                 onChange={(e) => handleChange("currentLocation", e.target.value)}
-                className="h-9 w-full rounded-lg border border-[#1A324A] bg-[#071522] pl-8.5 pr-3 text-xs text-[#E8EEF5] outline-none focus:border-[#FFA500]"
+                className="h-9 w-full rounded-lg border border-border bg-background pl-8.5 pr-3 text-xs text-foreground outline-none focus:border-[#FFA500]"
               />
             </div>
           </div>
 
           {/* Footer Actions */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#142637]">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-border">
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-[#1A324A] px-4 py-2 text-xs font-semibold text-[#8DA6BE] hover:bg-[#0E2337] hover:text-[#F1F5F9] transition cursor-pointer"
+              className="rounded-lg border border-border px-4 py-2 text-xs font-semibold text-muted-foreground hover:bg-muted hover:text-foreground transition cursor-pointer"
             >
               Cancel
             </button>

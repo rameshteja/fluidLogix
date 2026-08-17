@@ -86,26 +86,26 @@ export default function ViewVehicleModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
       {/* Dialog */}
-      <div className="relative w-full max-w-2xl overflow-hidden rounded-2xl border border-[#1A344D] bg-[#0A1A2B] shadow-2xl z-10 max-h-[90vh] flex flex-col animate-in fade-in zoom-in-95 duration-150">
+      <div className="relative w-full max-w-2xl overflow-hidden rounded-2xl border border-border bg-card text-card-foreground shadow-2xl z-10 max-h-[90vh] flex flex-col animate-in fade-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-[#142637] px-6 py-4 bg-[#081523]">
+        <div className="flex items-center justify-between border-b border-border px-6 py-4 bg-muted/40">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#FFA500] to-[#FF8C00] text-[#071522] shadow-sm font-mono font-bold text-sm">
               {vehicle.id}
             </div>
             <div>
               <div className="flex items-center gap-2.5">
-                <h2 className="text-lg font-bold text-[#F1F5F9] leading-tight">
+                <h2 className="text-lg font-bold text-foreground leading-tight">
                   {vehicle.plateNo}
                 </h2>
                 {getStatusBadge(vehicle.status)}
               </div>
-              <p className="text-xs text-[#5E7995] font-medium mt-0.5">
+              <p className="text-xs text-muted-foreground font-medium mt-0.5">
                 {vehicle.tankerType} • Registered Tanker
               </p>
             </div>
@@ -117,14 +117,14 @@ export default function ViewVehicleModal({
                 onClose();
                 onEditClick(vehicle);
               }}
-              className="flex items-center gap-1.5 rounded-lg border border-[#1E3B56] bg-[#0C1F32] px-3 py-1.5 text-xs font-semibold text-[#FFA500] hover:bg-[#FFA500] hover:text-[#071522] transition cursor-pointer"
+              className="flex items-center gap-1.5 rounded-lg border border-[#1E3B56] bg-muted px-3 py-1.5 text-xs font-semibold text-[#FFA500] hover:bg-[#FFA500] hover:text-[#071522] transition cursor-pointer"
             >
               <Edit size={13} />
               <span>Edit</span>
             </button>
             <button
               onClick={onClose}
-              className="rounded-lg p-1.5 text-[#5A7692] hover:bg-[#0E2337] hover:text-[#F1F5F9] transition cursor-pointer"
+              className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground transition cursor-pointer"
             >
               <X size={18} />
             </button>
@@ -135,19 +135,19 @@ export default function ViewVehicleModal({
         <div className="flex-1 overflow-y-auto p-6 space-y-5">
           {/* Key Metric Highlights */}
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-            <div className="rounded-xl border border-[#14293C] bg-[#071522] p-3.5">
-              <div className="flex items-center gap-2 text-xs font-medium text-[#7E9AB5]">
+            <div className="rounded-xl border border-border bg-background p-3.5">
+              <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
                 <Gauge size={15} className="text-[#FFA500]" />
                 <span>Payload Capacity</span>
               </div>
-              <div className="mt-1.5 text-xl font-bold text-[#F1F5F9] font-mono">
+              <div className="mt-1.5 text-xl font-bold text-foreground font-mono">
                 {vehicle.capacityDisplay}
               </div>
-              <span className="text-[10px] text-[#55718E]">Calibrated Tank Volume</span>
+              <span className="text-[10px] text-muted-foreground">Calibrated Tank Volume</span>
             </div>
 
-            <div className="rounded-xl border border-[#14293C] bg-[#071522] p-3.5">
-              <div className="flex items-center gap-2 text-xs font-medium text-[#7E9AB5]">
+            <div className="rounded-xl border border-border bg-background p-3.5">
+              <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
                 <ShieldAlert size={15} className="text-[#EF4444]" />
                 <span>Hazmat Classification</span>
               </div>
@@ -160,11 +160,11 @@ export default function ViewVehicleModal({
                   {vehicle.material}
                 </span>
               </div>
-              <span className="text-[10px] text-[#55718E] block mt-1">Hazard category compliance</span>
+              <span className="text-[10px] text-muted-foreground block mt-1">Hazard category compliance</span>
             </div>
 
-            <div className="rounded-xl border border-[#14293C] bg-[#071522] p-3.5">
-              <div className="flex items-center gap-2 text-xs font-medium text-[#7E9AB5]">
+            <div className="rounded-xl border border-border bg-background p-3.5">
+              <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
                 <Radio size={15} className="text-emerald-400" />
                 <span>GPS Telemetry</span>
               </div>
@@ -174,17 +174,17 @@ export default function ViewVehicleModal({
                   {vehicle.gpsStatus || "Online"}
                 </span>
               </div>
-              <span className="text-[10px] text-[#55718E]">Live Tracking Active</span>
+              <span className="text-[10px] text-muted-foreground">Live Tracking Active</span>
             </div>
           </div>
 
           {/* Location / Hub info */}
-          <div className="rounded-xl border border-[#14293C] bg-[#071522] p-3.5">
-            <div className="flex items-center gap-2 text-xs font-semibold text-[#8DA6BE] mb-1.5">
+          <div className="rounded-xl border border-border bg-background p-3.5">
+            <div className="flex items-center gap-2 text-xs font-semibold text-foreground/80 mb-1.5">
               <MapPin size={14} className="text-[#FFA500]" />
               <span>Current Geolocation & Hub</span>
             </div>
-            <div className="text-xs text-[#E8EEF5] font-medium pl-5">
+            <div className="text-xs text-foreground font-medium pl-5">
               {vehicle.currentLocation || "HQ Transport Yard, Main Logistics Hub"}
             </div>
           </div>
@@ -192,8 +192,8 @@ export default function ViewVehicleModal({
           {/* Transporter & Driver Details */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {/* Owner & Company */}
-            <div className="rounded-xl border border-[#14293C] bg-[#071522] p-4 space-y-3">
-              <div className="text-xs font-bold text-[#F1F5F9] pb-2 border-b border-[#142637]">
+            <div className="rounded-xl border border-border bg-background p-4 space-y-3">
+              <div className="text-xs font-bold text-foreground pb-2 border-b border-border">
                 Ownership & Client
               </div>
 
@@ -202,8 +202,8 @@ export default function ViewVehicleModal({
                   <User size={15} />
                 </div>
                 <div>
-                  <div className="text-[11px] text-[#5E7995]">Fleet Owner / Transporter</div>
-                  <div className="text-xs font-semibold text-[#E2E8F0]">{vehicle.owner}</div>
+                  <div className="text-[11px] text-muted-foreground">Fleet Owner / Transporter</div>
+                  <div className="text-xs font-semibold text-foreground">{vehicle.owner}</div>
                 </div>
               </div>
 
@@ -212,15 +212,15 @@ export default function ViewVehicleModal({
                   <Building2 size={15} />
                 </div>
                 <div>
-                  <div className="text-[11px] text-[#5E7995]">Assigned Industrial Client</div>
-                  <div className="text-xs font-semibold text-[#E2E8F0]">{vehicle.company}</div>
+                  <div className="text-[11px] text-muted-foreground">Assigned Industrial Client</div>
+                  <div className="text-xs font-semibold text-foreground">{vehicle.company}</div>
                 </div>
               </div>
             </div>
 
             {/* Driver & Assignment */}
-            <div className="rounded-xl border border-[#14293C] bg-[#071522] p-4 space-y-3">
-              <div className="text-xs font-bold text-[#F1F5F9] pb-2 border-b border-[#142637]">
+            <div className="rounded-xl border border-border bg-background p-4 space-y-3">
+              <div className="text-xs font-bold text-foreground pb-2 border-b border-border">
                 Driver & Safety Records
               </div>
 
@@ -229,8 +229,8 @@ export default function ViewVehicleModal({
                   <User size={15} />
                 </div>
                 <div>
-                  <div className="text-[11px] text-[#5E7995]">Primary Driver</div>
-                  <div className="text-xs font-semibold text-[#E2E8F0]">{vehicle.driver}</div>
+                  <div className="text-[11px] text-muted-foreground">Primary Driver</div>
+                  <div className="text-xs font-semibold text-foreground">{vehicle.driver}</div>
                 </div>
               </div>
 
@@ -239,7 +239,7 @@ export default function ViewVehicleModal({
                   <CheckCircle2 size={15} />
                 </div>
                 <div>
-                  <div className="text-[11px] text-[#5E7995]">Hazmat Safety Clearance</div>
+                  <div className="text-[11px] text-muted-foreground">Hazmat Safety Clearance</div>
                   <div className="text-xs font-semibold text-emerald-400">Verified & Certified</div>
                 </div>
               </div>
@@ -247,33 +247,33 @@ export default function ViewVehicleModal({
           </div>
 
           {/* Compliance & Maintenance Dates */}
-          <div className="rounded-xl border border-[#14293C] bg-[#071522] p-4">
-            <div className="text-xs font-bold text-[#F1F5F9] pb-2.5 border-b border-[#142637] mb-3">
+          <div className="rounded-xl border border-border bg-background p-4">
+            <div className="text-xs font-bold text-foreground pb-2.5 border-b border-border mb-3">
               Compliance, PUC & Service Schedules
             </div>
 
             <div className="grid grid-cols-2 gap-4 text-xs sm:grid-cols-4">
               <div>
-                <div className="text-[11px] text-[#5E7995]">Last Service</div>
-                <div className="font-mono text-xs font-semibold text-[#E2E8F0] mt-0.5">
+                <div className="text-[11px] text-muted-foreground">Last Service</div>
+                <div className="font-mono text-xs font-semibold text-foreground mt-0.5">
                   {vehicle.lastServiceDate || "2025-06-15"}
                 </div>
               </div>
               <div>
-                <div className="text-[11px] text-[#5E7995]">PUC Expiry</div>
+                <div className="text-[11px] text-muted-foreground">PUC Expiry</div>
                 <div className="font-mono text-xs font-semibold text-emerald-400 mt-0.5">
                   {vehicle.pucExpiry || "2025-12-31"}
                 </div>
               </div>
               <div>
-                <div className="text-[11px] text-[#5E7995]">Insurance Expiry</div>
+                <div className="text-[11px] text-muted-foreground">Insurance Expiry</div>
                 <div className="font-mono text-xs font-semibold text-emerald-400 mt-0.5">
                   {vehicle.insuranceExpiry || "2026-03-15"}
                 </div>
               </div>
               <div>
-                <div className="text-[11px] text-[#5E7995]">Registration Date</div>
-                <div className="font-mono text-xs font-semibold text-[#8DA6BE] mt-0.5">
+                <div className="text-[11px] text-muted-foreground">Registration Date</div>
+                <div className="font-mono text-xs font-semibold text-muted-foreground mt-0.5">
                   {vehicle.registrationDate || "2023-01-10"}
                 </div>
               </div>
@@ -282,8 +282,8 @@ export default function ViewVehicleModal({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between border-t border-[#142637] px-6 py-3.5 bg-[#081523]">
-          <div className="text-xs text-[#5E7995]">
+        <div className="flex items-center justify-between border-t border-border px-6 py-3.5 bg-muted/40">
+          <div className="text-xs text-muted-foreground">
             Vehicle ID: <span className="font-mono text-[#FFA500] font-bold">{vehicle.id}</span>
           </div>
           <button
