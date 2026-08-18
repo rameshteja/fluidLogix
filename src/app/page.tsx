@@ -164,19 +164,27 @@ export default function Home() {
             </p>
 
             {/* Buttons */}
-            <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+            <div className="mt-8 flex flex-wrap justify-center gap-3 sm:flex-row">
               <Link
                 href="/login"
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#FFA500] px-7 py-3.5 text-sm font-bold text-[#071522] shadow-lg shadow-orange-500/10 transition hover:bg-[#FFB52E]"
               >
-                Get Started
+                Sign In to Portal
                 <ArrowRight size={17} />
               </Link>
               <Link
-                href="/dashboard"
-                className="inline-flex items-center justify-center rounded-xl border border-border px-7 py-3.5 text-sm font-semibold text-foreground transition hover:bg-muted"
+                href="/register/owner"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#FFA500]/40 bg-[#FFA500]/10 px-5 py-3.5 text-sm font-bold text-[#FFA500] transition hover:bg-[#FFA500]/20"
               >
-                View Admin Demo
+                <Truck size={16} />
+                <span>Owner Registration</span>
+              </Link>
+              <Link
+                href="/register/company"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-border px-5 py-3.5 text-sm font-semibold text-foreground transition hover:bg-muted"
+              >
+                <Users size={16} />
+                <span>Company Registration</span>
               </Link>
             </div>
 
