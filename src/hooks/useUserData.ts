@@ -22,6 +22,7 @@ const userExportColumns: ExportColumn<UserItem>[] = [
   { header: "Email", key: "email" },
   { header: "License No.", formatter: (u) => u.licenseNo || "N/A" },
   { header: "Assigned Vehicle", formatter: (u) => u.assignedVehicle || "Unassigned" },
+  { header: "Owner", formatter: (u) => u.owner || "Independent / N/A" },
   { header: "Company", formatter: (u) => u.company || "Independent" },
   { header: "Verified", key: "verified" },
   { header: "Status", key: "status" },
@@ -40,6 +41,7 @@ export function useUserData() {
     verified: "ALL",
     assignedVehicle: "ALL",
     company: "ALL",
+    owner: "ALL",
     date: "",
     sortBy: "name",
     sortOrder: "asc",
@@ -77,6 +79,7 @@ export function useUserData() {
       verified: "ALL",
       assignedVehicle: "ALL",
       company: "ALL",
+      owner: "ALL",
       date: "",
     }));
   };
@@ -94,6 +97,10 @@ export function useUserData() {
   // Actions
   const handleSearch = (q: string) => {
     setParams((prev) => ({ ...prev, search: q, page: 1 }));
+  };
+
+  const setOwnerFilter = (owner: string) => {
+    setParams((prev) => ({ ...prev, owner, page: 1 }));
   };
 
   const setDateFilter = (date: string) => {
@@ -304,6 +311,7 @@ export function useUserData() {
     // Handlers
     handleTabChange,
     handleSearch,
+    setOwnerFilter,
     setDateFilter,
     handleSort,
     handlePageChange,

@@ -52,6 +52,7 @@ export interface LoadLogFilterParams {
   type?: TripType | "ALL";
   vehicle?: string;
   company?: string;
+  owner?: string;
   date?: string;
   sortBy?: LoadLogSortField;
   sortOrder?: "asc" | "desc";

@@ -86,18 +86,45 @@ export const FleetService = {
       );
     }
 
-    // 6. Specific Date filter (matches lastServiceDate or registrationDate)
-    if (date && date.trim() && date !== "ALL") {
+    // 6. Date / Date Range filter (matches lastServiceDate or registrationDate)
+    if (params.startDate || params.endDate) {
+      const s = params.startDate ? params.startDate.trim() : "";
+      const e = params.endDate ? params.endDate.trim() : "";
+
+      filtered = filtered.filter((v) => {
+        const datesToCheck = [v.lastServiceDate, v.registrationDate].filter(
+          Boolean
+        ) as string[];
+        if (datesToCheck.length === 0) return false;
+
+        return datesToCheck.some((d) => {
+          if (s && e) return d >= s && d <= e;
+          if (s) return d >= s;
+          if (e) return d <= e;
+          return true;
+        });
+      });
+    } else if (date && date.trim() && date !== "ALL") {
       const targetDate = date.trim();
-      filtered = filtered.filter(
-        (v) =>
-          (v.lastServiceDate &&
-            (v.lastServiceDate === targetDate ||
-              v.lastServiceDate.startsWith(targetDate))) ||
-          (v.registrationDate &&
-            (v.registrationDate === targetDate ||
-              v.registrationDate.startsWith(targetDate)))
-      );
+      if (targetDate.includes(" to ")) {
+        const [start, end] = targetDate.split(" to ").map((x) => x.trim());
+        filtered = filtered.filter((v) => {
+          const datesToCheck = [v.lastServiceDate, v.registrationDate].filter(
+            Boolean
+          ) as string[];
+          return datesToCheck.some((d) => d >= start && d <= end);
+        });
+      } else {
+        filtered = filtered.filter(
+          (v) =>
+            (v.lastServiceDate &&
+              (v.lastServiceDate === targetDate ||
+                v.lastServiceDate.startsWith(targetDate))) ||
+            (v.registrationDate &&
+              (v.registrationDate === targetDate ||
+                v.registrationDate.startsWith(targetDate)))
+        );
+      }
     }
 
     // 5. Sorting

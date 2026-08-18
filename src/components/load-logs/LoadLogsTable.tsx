@@ -27,12 +27,19 @@ import {
   Search,
   SlidersHorizontal,
   Truck,
+  Users,
   Weight,
   X,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import AutocompleteFilter from "@/components/common/AutocompleteFilter";
 import ExportModal from "@/components/common/ExportModal";
 import ViewLoadLogModal from "@/components/load-logs/ViewLoadLogModal";
+import {
+  COMPANY_FILTER_OPTIONS,
+  FLEET_OWNER_FILTER_OPTIONS,
+  VEHICLE_FILTER_OPTIONS,
+} from "@/data/filterOptions";
 import { useLoadLogsData } from "@/hooks/useLoadLogsData";
 import {
   LoadLogItem,
@@ -193,6 +200,7 @@ export default function LoadLogsTable() {
     (params.type && params.type !== "ALL" ? 1 : 0) +
     (params.vehicle && params.vehicle !== "ALL" ? 1 : 0) +
     (params.company && params.company !== "ALL" ? 1 : 0) +
+    (params.owner && params.owner !== "ALL" ? 1 : 0) +
     (params.date && params.date.trim() ? 1 : 0);
 
   const getSortIcon = (field: LoadLogSortField) => {
@@ -648,14 +656,14 @@ export default function LoadLogsTable() {
               className="flex items-center gap-1.5 h-9 rounded-xl border border-border bg-background px-3.5 text-xs font-semibold text-foreground hover:bg-muted hover:text-[#FFA500] transition cursor-pointer"
             >
               <Download size={14} />
-              <span>Export CSV</span>
+              <span>Export</span>
             </button>
 
             {/* Refresh Button */}
             <button
               onClick={handleRefresh}
               disabled={isRefreshing}
-              className="flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-background text-foreground hover:bg-muted transition cursor-pointer disabled:opacity-50"
+              className="flex h-9 w-9 min-w-[36px] items-center justify-center rounded-full aspect-square border border-border bg-background text-foreground hover:bg-muted transition cursor-pointer disabled:opacity-50"
               title="Refresh Daily Load Logs"
             >
               <RefreshCw
@@ -722,7 +730,7 @@ export default function LoadLogsTable() {
 
         {/* Expandable Advanced Filters Drawer */}
         {showFiltersPanel && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 p-4 rounded-xl border border-border bg-muted/20 animate-in fade-in duration-150 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 p-4 rounded-xl border border-border bg-muted/20 animate-in fade-in duration-150 text-xs">
             {/* Status Filter */}
             <div>
               <label className="block text-muted-foreground font-semibold mb-1">
@@ -761,63 +769,56 @@ export default function LoadLogsTable() {
               </select>
             </div>
 
-            {/* Vehicle Tanker Filter */}
-            <div>
-              <label className="block text-muted-foreground font-semibold mb-1">
-                Vehicle Tanker
-              </label>
-              <select
-                value={params.vehicle || "ALL"}
-                onChange={(e) =>
-                  setParams((prev) => ({
-                    ...prev,
-                    vehicle: e.target.value,
-                    page: 1,
-                  }))
-                }
-                className="h-8.5 w-full rounded-lg border border-border bg-background px-2.5 text-xs text-foreground outline-none focus:border-[#FFA500]"
-              >
-                <option value="ALL">All Vehicles</option>
-                <option value="TK-001">TK-001</option>
-                <option value="TK-002">TK-002</option>
-                <option value="TK-003">TK-003</option>
-                <option value="TK-004">TK-004</option>
-                <option value="TK-005">TK-005</option>
-                <option value="TK-006">TK-006</option>
-                <option value="TK-008">TK-008</option>
-                <option value="TK-011">TK-011</option>
-                <option value="TK-015">TK-015</option>
-                <option value="TK-019">TK-019</option>
-              </select>
-            </div>
+            {/* Vehicle Tanker Autocomplete Filter */}
+            <AutocompleteFilter
+              label="Vehicle Tanker"
+              value={params.vehicle || "ALL"}
+              onChange={(val) =>
+                setParams((prev) => ({
+                  ...prev,
+                  vehicle: val,
+                  page: 1,
+                }))
+              }
+              options={VEHICLE_FILTER_OPTIONS}
+              allOptionLabel="All Vehicles"
+              placeholder="Search vehicle, plate..."
+              icon={<Truck size={13} />}
+            />
 
-            {/* Company Filter */}
-            <div>
-              <label className="block text-muted-foreground font-semibold mb-1">
-                Client / Hub Company
-              </label>
-              <select
-                value={params.company || "ALL"}
-                onChange={(e) =>
-                  setParams((prev) => ({
-                    ...prev,
-                    company: e.target.value,
-                    page: 1,
-                  }))
-                }
-                className="h-8.5 w-full rounded-lg border border-border bg-background px-2.5 text-xs text-foreground outline-none focus:border-[#FFA500]"
-              >
-                <option value="ALL">All Companies</option>
-                <option value="ChemCorp Ltd">ChemCorp Ltd</option>
-                <option value="HazWaste Solutions">HazWaste Solutions</option>
-                <option value="EcoWaste Corp">EcoWaste Corp</option>
-                <option value="IndusChem Ltd">IndusChem Ltd</option>
-                <option value="AquaTech Pvt Ltd">AquaTech Pvt Ltd</option>
-                <option value="BioClean Enviro">BioClean Enviro</option>
-                <option value="Apex Solvents">Apex Solvents</option>
-                <option value="GreenEco Logistics">GreenEco Logistics</option>
-              </select>
-            </div>
+            {/* Client / Hub Company Autocomplete Filter */}
+            <AutocompleteFilter
+              label="Client / Hub Company"
+              value={params.company || "ALL"}
+              onChange={(val) =>
+                setParams((prev) => ({
+                  ...prev,
+                  company: val,
+                  page: 1,
+                }))
+              }
+              options={COMPANY_FILTER_OPTIONS}
+              allOptionLabel="All Companies"
+              placeholder="Search company, hub..."
+              icon={<Building2 size={13} />}
+            />
+
+            {/* Fleet Owner Autocomplete Filter */}
+            <AutocompleteFilter
+              label="Fleet Owner"
+              value={params.owner || "ALL"}
+              onChange={(val) =>
+                setParams((prev) => ({
+                  ...prev,
+                  owner: val,
+                  page: 1,
+                }))
+              }
+              options={FLEET_OWNER_FILTER_OPTIONS}
+              allOptionLabel="All Fleet Owners"
+              placeholder="Search owner, fleet..."
+              icon={<Users size={13} />}
+            />
 
             {/* Reset Filters Action */}
             <div className="flex items-end">
@@ -1350,11 +1351,11 @@ export default function LoadLogsTable() {
             </div>
 
             {/* Page Navigation Buttons */}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1.5">
               <button
                 onClick={() => handlePageChange(page - 1)}
                 disabled={page <= 1}
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-background text-foreground hover:bg-muted transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                className="flex h-8 w-8 min-w-[32px] items-center justify-center rounded-full aspect-square border border-border bg-background text-foreground hover:bg-muted transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                 aria-label="Previous Page"
               >
                 <ChevronLeft size={15} />
@@ -1367,13 +1368,13 @@ export default function LoadLogsTable() {
                   const showEllipsis = prev && p - prev > 1;
 
                   return (
-                    <div key={p} className="flex items-center">
-                      {showEllipsis && <span className="px-1 text-muted-foreground">...</span>}
+                    <div key={p} className="flex items-center gap-1">
+                      {showEllipsis && <span className="px-1 text-muted-foreground font-bold">...</span>}
                       <button
                         onClick={() => handlePageChange(p)}
-                        className={`h-8 w-8 rounded-lg text-xs font-bold transition cursor-pointer ${
+                        className={`flex h-8 w-8 min-w-[32px] items-center justify-center rounded-full aspect-square text-xs font-bold transition cursor-pointer ${
                           page === p
-                            ? "bg-[#FFA500] text-[#071522] shadow-sm"
+                            ? "bg-[#FFA500] text-[#071522] shadow-sm shadow-orange-500/20"
                             : "border border-border bg-background text-foreground hover:bg-muted"
                         }`}
                       >
@@ -1386,7 +1387,7 @@ export default function LoadLogsTable() {
               <button
                 onClick={() => handlePageChange(page + 1)}
                 disabled={page >= totalPages}
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-background text-foreground hover:bg-muted transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                className="flex h-8 w-8 min-w-[32px] items-center justify-center rounded-full aspect-square border border-border bg-background text-foreground hover:bg-muted transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                 aria-label="Next Page"
               >
                 <ChevronRight size={15} />

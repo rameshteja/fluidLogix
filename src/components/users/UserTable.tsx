@@ -5,12 +5,14 @@ import {
   ArrowDown,
   ArrowUp,
   ArrowUpDown,
+  Building2,
   Calendar,
   Check,
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
   Columns3,
+  Copy,
   Download,
   Edit,
   Eye,
@@ -20,14 +22,22 @@ import {
   Plus,
   RefreshCw,
   Search,
+  ShieldCheck,
   Trash2,
+  Truck,
+  User,
   X,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import AutocompleteFilter from "@/components/common/AutocompleteFilter";
 import ExportModal from "@/components/common/ExportModal";
 import AddUserModal from "@/components/users/AddUserModal";
 import EditUserModal from "@/components/users/EditUserModal";
 import ViewUserModal from "@/components/users/ViewUserModal";
+import {
+  FLEET_OWNER_FILTER_OPTIONS,
+  USER_VEHICLE_FILTER_OPTIONS,
+} from "@/data/filterOptions";
 import { useUserData } from "@/hooks/useUserData";
 import {
   UserCategory,
@@ -49,14 +59,17 @@ const USER_COLUMNS_MAP: Record<UserCategory, ColumnDef[]> = {
     { id: "phone", label: "Phone" },
     { id: "licenseNo", label: "License No." },
     { id: "assignedVehicle", label: "Assigned Vehicle" },
+    { id: "owner", label: "Fleet Owner" },
     { id: "verified", label: "Verified" },
     { id: "status", label: "Status" },
     { id: "actions", label: "Actions" },
   ],
   Owners: [
-    { id: "name", label: "Name", required: true },
+    { id: "name", label: "Owner Name", required: true },
     { id: "phone", label: "Phone" },
-    { id: "company", label: "Company / Fleet Size" },
+    { id: "company", label: "Company" },
+    { id: "vehiclesCount", label: "No. of Vehicles" },
+    { id: "driversCount", label: "No. of Drivers" },
     { id: "verified", label: "Verified" },
     { id: "status", label: "Status" },
     { id: "actions", label: "Actions" },
@@ -107,6 +120,7 @@ export default function UserTable() {
     // Handlers
     handleTabChange,
     handleSearch,
+    setOwnerFilter,
     setDateFilter,
     handleSort,
     handlePageChange,
@@ -134,7 +148,10 @@ export default function UserTable() {
     phone: true,
     licenseNo: true,
     assignedVehicle: true,
+    owner: true,
     company: true,
+    vehiclesCount: true,
+    driversCount: true,
     verified: true,
     status: true,
     actions: true,
@@ -499,7 +516,7 @@ export default function UserTable() {
           <button
             onClick={handleRefresh}
             disabled={isRefreshing}
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-background text-foreground hover:bg-muted transition cursor-pointer disabled:opacity-50"
+            className="flex h-9 w-9 min-w-[36px] items-center justify-center rounded-full aspect-square border border-border bg-background text-foreground hover:bg-muted transition cursor-pointer disabled:opacity-50"
             title="Refresh Users Data"
           >
             <RefreshCw
@@ -567,7 +584,7 @@ export default function UserTable() {
 
       {/* Expandable Advanced Filters Panel */}
       {showFiltersPanel && (
-        <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 p-4 rounded-xl border border-border bg-muted/20 animate-in fade-in duration-150 text-xs">
+        <div className={`grid grid-cols-1 ${activeTab === "Drivers" ? "sm:grid-cols-2 lg:grid-cols-5" : "sm:grid-cols-4"} gap-3 p-4 rounded-xl border border-border bg-muted/20 animate-in fade-in duration-150 text-xs`}>
           <div>
             <label className="block text-muted-foreground font-semibold mb-1">
               Account Status
@@ -612,30 +629,35 @@ export default function UserTable() {
             </select>
           </div>
 
-          <div>
-            <label className="block text-muted-foreground font-semibold mb-1">
-              Vehicle Filter
-            </label>
-            <select
-              value={params.assignedVehicle}
-              onChange={(e) =>
-                setParams((prev) => ({
-                  ...prev,
-                  assignedVehicle: e.target.value,
-                  page: 1,
-                }))
-              }
-              className="h-8.5 w-full rounded-lg border border-border bg-background px-2.5 text-xs text-foreground outline-none focus:border-[#FFA500]"
-            >
-              <option value="ALL">All Vehicles</option>
-              <option value="TK-001">TK-001</option>
-              <option value="TK-002">TK-002</option>
-              <option value="TK-003">TK-003</option>
-              <option value="TK-004">TK-004</option>
-              <option value="TK-005">TK-005</option>
-              <option value="Unassigned">Unassigned</option>
-            </select>
-          </div>
+          {/* Vehicle Filter Autocomplete */}
+          <AutocompleteFilter
+            label="Vehicle Filter"
+            value={params.assignedVehicle || "ALL"}
+            onChange={(val) =>
+              setParams((prev) => ({
+                ...prev,
+                assignedVehicle: val,
+                page: 1,
+              }))
+            }
+            options={USER_VEHICLE_FILTER_OPTIONS}
+            allOptionLabel="All Vehicles"
+            placeholder="Search vehicle, unassigned..."
+            icon={<Truck size={13} />}
+          />
+
+          {/* Fleet Owner Filter Autocomplete (for Drivers) */}
+          {activeTab === "Drivers" && (
+            <AutocompleteFilter
+              label="Fleet Owner"
+              value={params.owner || "ALL"}
+              onChange={(val) => setOwnerFilter(val)}
+              options={FLEET_OWNER_FILTER_OPTIONS}
+              allOptionLabel="All Fleet Owners"
+              placeholder="Search fleet owner..."
+              icon={<User size={13} />}
+            />
+          )}
 
           <div className="flex items-end">
             <button
@@ -646,6 +668,7 @@ export default function UserTable() {
                   verified: "ALL",
                   assignedVehicle: "ALL",
                   company: "ALL",
+                  owner: "ALL",
                   date: "",
                   search: "",
                   page: 1,
@@ -690,7 +713,16 @@ export default function UserTable() {
       {/* 3. Main Display Container: GRID VIEW vs LIST VIEW */}
       {viewMode === "grid" ? (
         /* GRID VIEW (Exact match to reference screenshot) */
-        <div className="min-h-[300px]">
+        <div className="relative min-h-[300px]">
+          {isRefreshing && (
+            <div className="absolute inset-0 bg-background/70 backdrop-blur-xs flex items-center justify-center z-20 rounded-2xl">
+              <div className="flex items-center gap-2 rounded-full bg-card border border-border px-4 py-2 text-xs font-semibold text-[#FFA500] shadow-xl">
+                <RefreshCw size={14} className="animate-spin" />
+                <span>Loading {activeTab.toLowerCase()} records...</span>
+              </div>
+            </div>
+          )}
+
           {filteredUsers.length === 0 ? (
             <div className="rounded-xl border border-border bg-background p-12 text-center text-muted-foreground">
               No users matching criteria.
@@ -768,41 +800,132 @@ export default function UserTable() {
                       </div>
                     </div>
 
-                    {/* Middle Section: 3-Column Stats Divider (Matching Reference Image) */}
-                    <div className="border-t border-b border-border/60 py-3.5 my-1 grid grid-cols-3 text-center gap-2">
-                      {/* Stat 1: Vehicles */}
-                      <div className="px-1 border-r border-border/40">
-                        <div className="text-base font-extrabold text-foreground">
-                          {vehicleCountVal}
+                    {/* Middle Section: Category-Tailored Stats */}
+                    {activeTab === "Drivers" ? (
+                      <div className="border-t border-b border-border/60 py-3 my-1 grid grid-cols-3 text-center gap-1.5 bg-muted/10 rounded-xl px-1">
+                        {/* Stat 1: License No */}
+                        <div className="px-1 border-r border-border/40 min-w-0">
+                          <div
+                            className="text-xs font-mono font-extrabold text-[#FFA500] truncate"
+                            title={user.licenseNo || "—"}
+                          >
+                            {user.licenseNo || "—"}
+                          </div>
+                          <div className="text-[10px] text-muted-foreground font-medium mt-0.5">
+                            Licence No.
+                          </div>
                         </div>
-                        <div className="text-[11px] text-muted-foreground font-medium mt-0.5">
-                          Vehicles
-                        </div>
-                      </div>
 
-                      {/* Stat 2: Drivers */}
-                      <div className="px-1 border-r border-border/40">
-                        <div className="text-base font-extrabold text-foreground">
-                          {driverCountVal}
+                        {/* Stat 2: Expiry Date */}
+                        <div className="px-1 border-r border-border/40 min-w-0">
+                          <div
+                            className="text-xs font-mono font-bold text-foreground truncate"
+                            title={user.licenseExpiryDate || "2028-10-15"}
+                          >
+                            {user.licenseExpiryDate || "2028-10-15"}
+                          </div>
+                          <div className="text-[10px] text-muted-foreground font-medium mt-0.5">
+                            Expiry Date
+                          </div>
                         </div>
-                        <div className="text-[11px] text-muted-foreground font-medium mt-0.5">
-                          Drivers
-                        </div>
-                      </div>
 
-                      {/* Stat 3: Bank Details */}
-                      <div className="px-1 truncate">
-                        <div
-                          className="text-xs font-bold text-foreground truncate"
-                          title={user.bankAccount || "SBI ****4532"}
-                        >
-                          {user.bankAccount || "SBI ****4532"}
-                        </div>
-                        <div className="text-[11px] text-muted-foreground font-medium mt-0.5">
-                          Bank
+                        {/* Stat 3: Fleet Owner */}
+                        <div className="px-1 min-w-0">
+                          <div
+                            className="text-xs font-bold text-foreground truncate"
+                            title={user.owner || "Independent"}
+                          >
+                            {user.owner || "Independent"}
+                          </div>
+                          <div className="text-[10px] text-muted-foreground font-medium mt-0.5">
+                            Owner Name
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    ) : activeTab === "Owners" ? (
+                      <div className="border-t border-b border-border/60 py-3 my-1 grid grid-cols-4 text-center gap-1 bg-muted/10 rounded-xl px-1">
+                        {/* Stat 1: Total Vehicles */}
+                        <div className="px-1 border-r border-border/40 min-w-0">
+                          <div className="text-sm font-extrabold text-foreground">
+                            {user.fleetSize || user.vehiclesCount || 2}
+                          </div>
+                          <div className="text-[10px] text-muted-foreground font-medium mt-0.5">
+                            Total Fleet
+                          </div>
+                        </div>
+
+                        {/* Stat 2: Active Vehicles */}
+                        <div className="px-1 border-r border-border/40 min-w-0">
+                          <div className="text-sm font-extrabold text-emerald-400 font-mono">
+                            {user.activeFleetCount || user.fleetSize || 2}
+                          </div>
+                          <div className="text-[10px] text-emerald-400/80 font-medium mt-0.5">
+                            Active Fleet
+                          </div>
+                        </div>
+
+                        {/* Stat 3: Drivers */}
+                        <div className="px-1 border-r border-border/40 min-w-0">
+                          <div className="text-sm font-extrabold text-foreground">
+                            {user.driversCount || 2}
+                          </div>
+                          <div className="text-[10px] text-muted-foreground font-medium mt-0.5">
+                            Drivers
+                          </div>
+                        </div>
+
+                        {/* Stat 4: Bank Account */}
+                        <div className="px-1 min-w-0 truncate">
+                          <div
+                            className="text-xs font-bold text-[#FFA500] truncate"
+                            title={user.bankAccount || "HDFC ****2341"}
+                          >
+                            {user.bankAccount || "HDFC ****2341"}
+                          </div>
+                          <div className="text-[10px] text-muted-foreground font-medium mt-0.5">
+                            Bank
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="border-t border-b border-border/60 py-3.5 my-1 grid grid-cols-3 text-center gap-2">
+                        {/* Stat 1: Active Tankers */}
+                        <div className="px-1 border-r border-border/40">
+                          <div className="text-base font-extrabold text-foreground">
+                            {user.activeFleetCount || user.vehiclesCount || 5}
+                          </div>
+                          <div className="text-[11px] text-muted-foreground font-medium mt-0.5">
+                            Active Tankers
+                          </div>
+                        </div>
+
+                        {/* Stat 2: Contact Person */}
+                        <div className="px-1 border-r border-border/40 min-w-0">
+                          <div
+                            className="text-xs font-bold text-foreground truncate"
+                            title={user.contactPerson || "Logistics Head"}
+                          >
+                            {user.contactPerson || "Logistics Head"}
+                          </div>
+                          <div className="text-[11px] text-muted-foreground font-medium mt-0.5">
+                            Contact
+                          </div>
+                        </div>
+
+                        {/* Stat 3: GSTIN */}
+                        <div className="px-1 truncate">
+                          <div
+                            className="text-xs font-mono font-bold text-[#FFA500] truncate"
+                            title={user.gstNumber || "36AAACH1234E1Z1"}
+                          >
+                            {user.gstNumber || "GST Reg."}
+                          </div>
+                          <div className="text-[11px] text-muted-foreground font-medium mt-0.5">
+                            GSTIN
+                          </div>
+                        </div>
+                      </div>
+                    )}
 
                     {/* Card Footer: Category Details & Action Buttons */}
                     <div className="flex items-center justify-between pt-2.5 text-xs">
@@ -818,11 +941,20 @@ export default function UserTable() {
                           {user.status}
                         </span>
 
-                        {/* License or Assigned Vehicle Tag */}
-                        {activeTab === "Drivers" && user.assignedVehicle && (
-                          <span className="font-mono text-[11px] text-[#FFA500] font-bold">
-                            {user.assignedVehicle}
-                          </span>
+                        {/* License or Assigned Vehicle Tag & Owner */}
+                        {activeTab === "Drivers" && (
+                          <div className="flex items-center gap-1.5">
+                            {user.assignedVehicle && (
+                              <span className="font-mono text-[11px] text-[#FFA500] font-bold">
+                                {user.assignedVehicle}
+                              </span>
+                            )}
+                            {user.owner && (
+                              <span className="text-[10px] text-muted-foreground bg-muted/60 px-1.5 py-0.5 rounded-md font-medium">
+                                {user.owner}
+                              </span>
+                            )}
+                          </div>
                         )}
                       </div>
 
@@ -865,7 +997,16 @@ export default function UserTable() {
         </div>
       ) : (
         /* LIST VIEW (Table Layout) */
-        <div className="rounded-xl border border-border bg-background shadow-sm overflow-hidden">
+        <div className="relative rounded-xl border border-border bg-background shadow-sm overflow-hidden min-h-[300px]">
+          {isRefreshing && (
+            <div className="absolute inset-0 bg-background/70 backdrop-blur-xs flex items-center justify-center z-20">
+              <div className="flex items-center gap-2 rounded-full bg-card border border-border px-4 py-2 text-xs font-semibold text-[#FFA500] shadow-xl">
+                <RefreshCw size={14} className="animate-spin" />
+                <span>Loading {activeTab.toLowerCase()} records...</span>
+              </div>
+            </div>
+          )}
+
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
               {/* Table Header */}
@@ -920,8 +1061,52 @@ export default function UserTable() {
                     </th>
                   )}
 
+                  {activeTab === "Drivers" && visibleColumns.owner !== false && (
+                    <th
+                      onClick={() => handleSort("owner")}
+                      className="px-4 py-3.5 cursor-pointer hover:text-foreground transition select-none group"
+                    >
+                      <div className="flex items-center gap-1.5">
+                        <span>Fleet Owner</span>
+                        {getSortIcon("owner")}
+                      </div>
+                    </th>
+                  )}
+
                   {activeTab === "Owners" && visibleColumns.company !== false && (
-                    <th className="px-4 py-3.5">Company / Fleet Size</th>
+                    <th
+                      onClick={() => handleSort("company")}
+                      className="px-4 py-3.5 cursor-pointer hover:text-foreground transition select-none group"
+                    >
+                      <div className="flex items-center gap-1.5">
+                        <span>Company</span>
+                        {getSortIcon("company")}
+                      </div>
+                    </th>
+                  )}
+
+                  {activeTab === "Owners" && visibleColumns.vehiclesCount !== false && (
+                    <th
+                      onClick={() => handleSort("vehiclesCount")}
+                      className="px-4 py-3.5 cursor-pointer hover:text-foreground transition select-none group"
+                    >
+                      <div className="flex items-center gap-1.5">
+                        <span>No. of Vehicles</span>
+                        {getSortIcon("vehiclesCount")}
+                      </div>
+                    </th>
+                  )}
+
+                  {activeTab === "Owners" && visibleColumns.driversCount !== false && (
+                    <th
+                      onClick={() => handleSort("driversCount")}
+                      className="px-4 py-3.5 cursor-pointer hover:text-foreground transition select-none group"
+                    >
+                      <div className="flex items-center gap-1.5">
+                        <span>No. of Drivers</span>
+                        {getSortIcon("driversCount")}
+                      </div>
+                    </th>
                   )}
 
                   {activeTab === "Companies" && visibleColumns.company !== false && (
@@ -1025,15 +1210,39 @@ export default function UserTable() {
                           </td>
                         )}
 
-                        {/* Company & Fleet Size (Owners) */}
-                        {activeTab === "Owners" && visibleColumns.company !== false && (
+                        {/* Fleet Owner (Drivers) */}
+                        {activeTab === "Drivers" && visibleColumns.owner !== false && (
                           <td className="px-4 py-3.5">
-                            <div className="font-semibold text-foreground">
-                              {user.company || "Independent"}
-                            </div>
-                            <div className="text-[11px] text-muted-foreground">
-                              {user.fleetSize} Vehicles
-                            </div>
+                            <span className="font-semibold text-foreground">
+                              {user.owner || "Independent / N/A"}
+                            </span>
+                          </td>
+                        )}
+
+                        {/* Company (Owners) */}
+                        {activeTab === "Owners" && visibleColumns.company !== false && (
+                          <td className="px-4 py-3.5 font-medium text-foreground">
+                            {user.company || "Independent Transport"}
+                          </td>
+                        )}
+
+                        {/* No. of Vehicles (Owners) */}
+                        {activeTab === "Owners" && visibleColumns.vehiclesCount !== false && (
+                          <td className="px-4 py-3.5 font-mono">
+                            <span className="font-bold text-[#FFA500]">
+                              {user.fleetSize || user.vehiclesCount || 2}
+                            </span>{" "}
+                            <span className="text-muted-foreground text-[11px]">Tankers</span>
+                          </td>
+                        )}
+
+                        {/* No. of Drivers (Owners) */}
+                        {activeTab === "Owners" && visibleColumns.driversCount !== false && (
+                          <td className="px-4 py-3.5 font-mono">
+                            <span className="font-bold text-foreground">
+                              {user.driversCount || 2}
+                            </span>{" "}
+                            <span className="text-muted-foreground text-[11px]">Drivers</span>
                           </td>
                         )}
 
@@ -1165,16 +1374,16 @@ export default function UserTable() {
           <button
             onClick={() => handlePageChange(params.page - 1)}
             disabled={params.page <= 1}
-            className="rounded-lg border border-border bg-background p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-40 cursor-pointer transition"
+            className="flex h-8 w-8 min-w-[32px] items-center justify-center rounded-full aspect-square border border-border bg-background text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-40 cursor-pointer transition"
           >
-            <ChevronLeft size={16} />
+            <ChevronLeft size={15} />
           </button>
 
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
             <button
               key={p}
               onClick={() => handlePageChange(p)}
-              className={`h-7 w-7 rounded-lg text-xs font-bold transition cursor-pointer ${
+              className={`flex h-8 w-8 min-w-[32px] items-center justify-center rounded-full aspect-square text-xs font-bold transition cursor-pointer ${
                 p === params.page
                   ? "bg-[#FFA500] text-[#071522] shadow-sm shadow-orange-500/20"
                   : "border border-border bg-background text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -1187,9 +1396,9 @@ export default function UserTable() {
           <button
             onClick={() => handlePageChange(params.page + 1)}
             disabled={params.page >= totalPages}
-            className="rounded-lg border border-border bg-background p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-40 cursor-pointer transition"
+            className="flex h-8 w-8 min-w-[32px] items-center justify-center rounded-full aspect-square border border-border bg-background text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-40 cursor-pointer transition"
           >
-            <ChevronRight size={16} />
+            <ChevronRight size={15} />
           </button>
         </div>
       </div>

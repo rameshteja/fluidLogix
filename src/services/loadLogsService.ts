@@ -46,6 +46,19 @@ export function getLoadLogStats(logs: LoadLogItem[]): LoadLogStats {
   };
 }
 
+const VEHICLE_OWNER_MAP: Record<string, string> = {
+  "TK-001": "Ravi Kumar",
+  "TK-002": "Prakash Reddy",
+  "TK-003": "Srinivas Rao",
+  "TK-004": "Kishore Patel",
+  "TK-005": "Venkat Babu",
+  "TK-006": "Deepak Shah",
+  "TK-008": "Ravi Kumar",
+  "TK-011": "Prakash Reddy",
+  "TK-015": "Kishore Patel",
+  "TK-019": "Venkat Babu",
+};
+
 export function filterAndSortLoadLogs(
   logs: LoadLogItem[],
   params: LoadLogFilterParams
@@ -64,6 +77,7 @@ export function filterAndSortLoadLogs(
     type = "ALL",
     vehicle = "ALL",
     company = "ALL",
+    owner = "ALL",
     date = "",
     sortBy = "date",
     sortOrder = "desc",
@@ -134,7 +148,15 @@ export function filterAndSortLoadLogs(
     );
   }
 
-  // 7. Date Filter (Flexible normalization: matches "2025-07-19", "19 Jul 2025", "19-07-2025")
+  // 7. Fleet Owner Filter
+  if (owner && owner !== "ALL") {
+    filtered = filtered.filter((item) => {
+      const mappedOwner = VEHICLE_OWNER_MAP[item.vehicle];
+      return mappedOwner && mappedOwner.toLowerCase() === owner.toLowerCase();
+    });
+  }
+
+  // 8. Date Filter (Flexible normalization: matches "2025-07-19", "19 Jul 2025", "19-07-2025")
   if (date && date.trim()) {
     const target = date.trim().toLowerCase();
     filtered = filtered.filter((item) => {

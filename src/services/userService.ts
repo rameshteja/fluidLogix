@@ -23,6 +23,7 @@ export function filterAndSortUsers(
         (u.licenseNo && u.licenseNo.toLowerCase().includes(q)) ||
         (u.assignedVehicle && u.assignedVehicle.toLowerCase().includes(q)) ||
         (u.company && u.company.toLowerCase().includes(q)) ||
+        (u.owner && u.owner.toLowerCase().includes(q)) ||
         (u.contactPerson && u.contactPerson.toLowerCase().includes(q))
     );
   }
@@ -47,7 +48,12 @@ export function filterAndSortUsers(
     result = result.filter((u) => u.company === params.company);
   }
 
-  // 6. Date Filter
+  // 6. Owner Filter
+  if (params.owner && params.owner !== "ALL") {
+    result = result.filter((u) => u.owner === params.owner);
+  }
+
+  // 7. Date Filter
   if (params.date && params.date.trim()) {
     result = result.filter((u) => u.dateRegistered === params.date?.trim());
   }

@@ -43,23 +43,25 @@ export default function ExportModal({
   onClose,
   title,
   defaultFilename,
-  availableColumns,
-  totalRecordsCount,
-  currentPageCount,
-  filteredCount,
+  availableColumns = [],
+  totalRecordsCount = 0,
+  currentPageCount = 0,
+  filteredCount = 0,
   onExport,
 }: ExportModalProps) {
   const [format, setFormat] = useState<ExportFormat>("pdf");
   const [scope, setScope] = useState<ExportScope>("all");
   const [selectedCols, setSelectedCols] = useState<string[]>([]);
-  const [filename, setFilename] = useState(defaultFilename);
+  const [filename, setFilename] = useState(defaultFilename || "export");
   const [isExporting, setIsExporting] = useState(false);
+
+  const cols = availableColumns || [];
 
   // Initialize all columns selected when modal opens
   useEffect(() => {
     if (isOpen) {
-      setSelectedCols(availableColumns.map((c) => c.id));
-      setFilename(defaultFilename);
+      setSelectedCols(cols.map((c) => c.id));
+      setFilename(defaultFilename || "export");
       setFormat("pdf");
       setScope("all");
       setIsExporting(false);
@@ -79,17 +81,17 @@ export default function ExportModal({
   };
 
   const selectAllColumns = () => {
-    setSelectedCols(availableColumns.map((c) => c.id));
+    setSelectedCols(cols.map((c) => c.id));
   };
 
   const deselectAllColumns = () => {
     // Keep at least the first column selected
-    if (availableColumns.length > 0) {
-      setSelectedCols([availableColumns[0].id]);
+    if (cols.length > 0) {
+      setSelectedCols([cols[0].id]);
     }
   };
 
-  const isAllSelected = selectedCols.length === availableColumns.length;
+  const isAllSelected = cols.length > 0 && selectedCols.length === cols.length;
 
   const handleExportClick = async () => {
     if (selectedCols.length === 0) return;

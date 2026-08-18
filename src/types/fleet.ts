@@ -61,6 +61,8 @@ export interface FleetQueryParams {
   material?: "ALL" | MaterialCategory;
   company?: "ALL" | string;
   date?: string;
+  startDate?: string;
+  endDate?: string;
   sortBy?: keyof FleetVehicle;
   sortOrder?: "asc" | "desc";
   page?: number;

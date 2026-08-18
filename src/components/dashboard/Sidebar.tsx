@@ -4,10 +4,12 @@ import {
   CreditCard,
   Droplets,
   FileText,
+  Landmark,
   LayoutGrid,
   LogOut,
   Settings,
   Truck,
+  User,
   Users,
   X,
 } from "lucide-react";
@@ -34,6 +36,11 @@ const navItems = [
     name: "Billing",
     href: "/dashboard/billing",
     icon: CreditCard,
+  },
+  {
+    name: "Banks",
+    href: "/dashboard/banks",
+    icon: Landmark,
   },
   {
     name: "Users",
@@ -119,11 +126,28 @@ export default function Sidebar({
       {/* Bottom Actions */}
       <div className="border-t border-sidebar-border pt-4 space-y-1">
         <Link
+          href="/dashboard/profile"
+          onClick={onCloseMobile}
+          className={`flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-medium transition ${
+            pathname === "/dashboard/profile"
+              ? "bg-[#FFA500]/10 text-[#FFA500] border border-[#FFA500]/25"
+              : "text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+          }`}
+        >
+          <User size={18} className={pathname === "/dashboard/profile" ? "text-[#FFA500]" : "text-muted-foreground"} />
+          <span>Admin Profile</span>
+        </Link>
+
+        <Link
           href="/dashboard/settings"
           onClick={onCloseMobile}
-          className="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-medium text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition"
+          className={`flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-medium transition ${
+            pathname === "/dashboard/settings"
+              ? "bg-[#FFA500]/10 text-[#FFA500] border border-[#FFA500]/25"
+              : "text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+          }`}
         >
-          <Settings size={18} className="text-muted-foreground" />
+          <Settings size={18} className={pathname === "/dashboard/settings" ? "text-[#FFA500]" : "text-muted-foreground"} />
           <span>Settings</span>
         </Link>
 

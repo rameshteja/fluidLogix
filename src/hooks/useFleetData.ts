@@ -187,7 +187,11 @@ export function useFleetData(initialParams: FleetQueryParams = {}) {
   };
 
   const setDateFilter = (date: string) => {
-    setParams((prev) => ({ ...prev, date, page: 1 }));
+    setParams((prev) => ({ ...prev, date, startDate: "", endDate: "", page: 1 }));
+  };
+
+  const setDateRangeFilter = (startDate: string, endDate: string) => {
+    setParams((prev) => ({ ...prev, startDate, endDate, date: "", page: 1 }));
   };
 
   const resetFilters = () => {
@@ -198,6 +202,8 @@ export function useFleetData(initialParams: FleetQueryParams = {}) {
       material: "ALL",
       company: "ALL",
       date: "",
+      startDate: "",
+      endDate: "",
       sortBy: "id",
       sortOrder: "asc",
       page: 1,
@@ -359,6 +365,8 @@ export function useFleetData(initialParams: FleetQueryParams = {}) {
     setMaterialFilter,
     setCompanyFilter,
     setDateFilter,
+    setDateRangeFilter,
+    setParams,
     resetFilters,
     handleSort,
     setPage,

@@ -1,3 +1,5 @@
+import { UploadedDocInfo } from "@/components/common/FileUploadDropzone";
+
 export type UserCategory = "Drivers" | "Owners" | "Companies";
 
 export type UserStatus = "Active" | "Inactive" | "Suspended";
@@ -11,8 +13,10 @@ export interface UserItem {
   email: string;
   category: UserCategory;
   licenseNo?: string; // For Drivers
+  licenseExpiryDate?: string; // For Drivers (e.g. "2028-10-15")
   assignedVehicle?: string; // e.g. "TK-001"
   company?: string; // Operating company or owner's company
+  owner?: string; // Fleet Owner (e.g., "Ravi Kumar", "Prakash Reddy")
   fleetSize?: number; // For Owners
   activeFleetCount?: number; // For Companies
   contactPerson?: string; // For Companies
@@ -23,14 +27,28 @@ export interface UserItem {
   status: UserStatus;
   dateRegistered: string;
   avatarUrl?: string;
+
+  // Documents & Verification Attributes
+  addressProofType?: string;
+  addressProofFile?: UploadedDocInfo | string | null;
+  licenseFile?: UploadedDocInfo | string | null;
+  panNumber?: string;
+  panFile?: UploadedDocInfo | string | null;
+  gstNumber?: string;
+  companyRegistrationCertFile?: UploadedDocInfo | string | null;
+  incorporationCertFile?: UploadedDocInfo | string | null;
 }
 
 export type UserSortField =
   | "name"
   | "phone"
   | "licenseNo"
+  | "licenseExpiryDate"
   | "assignedVehicle"
   | "company"
+  | "owner"
+  | "vehiclesCount"
+  | "driversCount"
   | "verified"
   | "status"
   | "dateRegistered";
@@ -44,6 +62,7 @@ export interface UserFilterParams {
   verified: UserVerificationStatus | "ALL";
   assignedVehicle: string | "ALL";
   company: string | "ALL";
+  owner?: string | "ALL";
   date?: string;
   sortBy: UserSortField;
   sortOrder: SortOrder;
@@ -58,12 +77,24 @@ export interface UserFormData {
   email: string;
   category: UserCategory;
   licenseNo?: string;
+  licenseExpiryDate?: string;
   assignedVehicle?: string;
   company?: string;
+  owner?: string;
   fleetSize?: number;
   contactPerson?: string;
   verified: UserVerificationStatus;
   status: UserStatus;
+
+  // Documents & IDs
+  addressProofType?: string;
+  addressProofFile?: UploadedDocInfo | string | null;
+  licenseFile?: UploadedDocInfo | string | null;
+  panNumber?: string;
+  panFile?: UploadedDocInfo | string | null;
+  gstNumber?: string;
+  companyRegistrationCertFile?: UploadedDocInfo | string | null;
+  incorporationCertFile?: UploadedDocInfo | string | null;
 }
 
 export interface UserFormErrors {
@@ -72,4 +103,6 @@ export interface UserFormErrors {
   email?: string;
   licenseNo?: string;
   company?: string;
+  gstNumber?: string;
+  panNumber?: string;
 }

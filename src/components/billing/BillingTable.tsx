@@ -32,15 +32,22 @@ import {
   SlidersHorizontal,
   Trash2,
   Truck,
+  UserCheck,
+  Users,
   Weight,
   X,
   Zap,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import AutocompleteFilter from "@/components/common/AutocompleteFilter";
 import ExportModal from "@/components/common/ExportModal";
 import GenerateBillsModal from "@/components/billing/GenerateBillsModal";
 import PayNowModal from "@/components/billing/PayNowModal";
 import ViewReceiptModal from "@/components/billing/ViewReceiptModal";
+import {
+  FLEET_OWNER_FILTER_OPTIONS,
+  VEHICLE_FILTER_OPTIONS,
+} from "@/data/filterOptions";
 import { useBillingData } from "@/hooks/useBillingData";
 import {
   BillingSortField,
@@ -553,14 +560,14 @@ export default function BillingTable() {
               className="flex items-center gap-1.5 h-9 rounded-xl border border-border bg-background px-3.5 text-xs font-semibold text-foreground hover:bg-muted hover:text-[#FFA500] transition cursor-pointer"
             >
               <Download size={14} />
-              <span>Export CSV</span>
+              <span>Export</span>
             </button>
 
             {/* Refresh */}
             <button
               onClick={handleRefresh}
               disabled={isRefreshing}
-              className="flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-background text-foreground hover:bg-muted transition cursor-pointer disabled:opacity-50"
+              className="flex h-9 w-9 min-w-[36px] items-center justify-center rounded-full aspect-square border border-border bg-background text-foreground hover:bg-muted transition cursor-pointer disabled:opacity-50"
               title="Refresh Billing Data"
             >
               <RefreshCw
@@ -593,55 +600,39 @@ export default function BillingTable() {
               </select>
             </div>
 
-            {/* Vehicle Tanker Filter */}
-            <div>
-              <label className="block text-muted-foreground font-semibold mb-1">
-                Vehicle Tanker
-              </label>
-              <select
-                value={params.vehicle || "ALL"}
-                onChange={(e) =>
-                  setParams((prev) => ({
-                    ...prev,
-                    vehicle: e.target.value,
-                    page: 1,
-                  }))
-                }
-                className="h-8.5 w-full rounded-lg border border-border bg-background px-2.5 text-xs text-foreground outline-none focus:border-[#FFA500]"
-              >
-                <option value="ALL">All Tankers</option>
-                <option value="TK-001">TK-001</option>
-                <option value="TK-002">TK-002</option>
-                <option value="TK-004">TK-004</option>
-                <option value="TK-005">TK-005</option>
-                <option value="TK-006">TK-006</option>
-              </select>
-            </div>
+            {/* Vehicle Tanker Autocomplete Filter */}
+            <AutocompleteFilter
+              label="Vehicle Tanker"
+              value={params.vehicle || "ALL"}
+              onChange={(val) =>
+                setParams((prev) => ({
+                  ...prev,
+                  vehicle: val,
+                  page: 1,
+                }))
+              }
+              options={VEHICLE_FILTER_OPTIONS}
+              allOptionLabel="All Tankers"
+              placeholder="Search tanker code, plate..."
+              icon={<Truck size={13} />}
+            />
 
-            {/* Owner Filter */}
-            <div>
-              <label className="block text-muted-foreground font-semibold mb-1">
-                Fleet Owner
-              </label>
-              <select
-                value={params.owner || "ALL"}
-                onChange={(e) =>
-                  setParams((prev) => ({
-                    ...prev,
-                    owner: e.target.value,
-                    page: 1,
-                  }))
-                }
-                className="h-8.5 w-full rounded-lg border border-border bg-background px-2.5 text-xs text-foreground outline-none focus:border-[#FFA500]"
-              >
-                <option value="ALL">All Fleet Owners</option>
-                <option value="Ravi Kumar">Ravi Kumar</option>
-                <option value="Prakash Reddy">Prakash Reddy</option>
-                <option value="Kishore Patel">Kishore Patel</option>
-                <option value="Venkat Babu">Venkat Babu</option>
-                <option value="Deepak Shah">Deepak Shah</option>
-              </select>
-            </div>
+            {/* Fleet Owner Autocomplete Filter */}
+            <AutocompleteFilter
+              label="Fleet Owner"
+              value={params.owner || "ALL"}
+              onChange={(val) =>
+                setParams((prev) => ({
+                  ...prev,
+                  owner: val,
+                  page: 1,
+                }))
+              }
+              options={FLEET_OWNER_FILTER_OPTIONS}
+              allOptionLabel="All Fleet Owners"
+              placeholder="Search owner, bank, fleet..."
+              icon={<Users size={13} />}
+            />
 
             {/* Reset Filters */}
             <div className="flex items-end">
@@ -1202,7 +1193,7 @@ export default function BillingTable() {
               <button
                 onClick={() => handlePageChange(page - 1)}
                 disabled={page <= 1}
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-background text-foreground hover:bg-muted transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                className="flex h-8 w-8 min-w-[32px] items-center justify-center rounded-full aspect-square border border-border bg-background text-foreground hover:bg-muted transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                 aria-label="Previous Page"
               >
                 <ChevronLeft size={15} />
@@ -1212,7 +1203,7 @@ export default function BillingTable() {
                 <button
                   key={p}
                   onClick={() => handlePageChange(p)}
-                  className={`h-8 w-8 rounded-lg text-xs font-bold transition cursor-pointer ${
+                  className={`flex h-8 w-8 min-w-[32px] items-center justify-center rounded-full aspect-square text-xs font-bold transition cursor-pointer ${
                     page === p
                       ? "bg-[#FFA500] text-[#071522] shadow-sm"
                       : "border border-border bg-background text-foreground hover:bg-muted"
@@ -1225,7 +1216,7 @@ export default function BillingTable() {
               <button
                 onClick={() => handlePageChange(page + 1)}
                 disabled={page >= totalPages}
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-background text-foreground hover:bg-muted transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                className="flex h-8 w-8 min-w-[32px] items-center justify-center rounded-full aspect-square border border-border bg-background text-foreground hover:bg-muted transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                 aria-label="Next Page"
               >
                 <ChevronRight size={15} />

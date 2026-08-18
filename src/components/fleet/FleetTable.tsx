@@ -4,8 +4,11 @@ import {
   ArrowDown,
   ArrowUp,
   ArrowUpDown,
+  Building2,
   Calendar,
   Check,
+  ChevronLeft,
+  ChevronRight,
   Columns3,
   Download,
   Edit,
@@ -19,12 +22,15 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import AutocompleteFilter from "@/components/common/AutocompleteFilter";
+import DateRangePicker from "@/components/common/DateRangePicker";
+import ExportModal from "@/components/common/ExportModal";
+import { COMPANY_FILTER_OPTIONS } from "@/data/filterOptions";
 import { useFleetData } from "@/hooks/useFleetData";
 import { FleetStatus, FleetVehicle, MaterialCategory, TankerType } from "@/types/fleet";
 import AddVehicleModal from "./AddVehicleModal";
 import EditVehicleModal from "./EditVehicleModal";
 import ViewVehicleModal from "./ViewVehicleModal";
-import ExportModal from "@/components/common/ExportModal";
 
 interface ColumnDef {
   id: string;
@@ -60,6 +66,7 @@ export default function FleetTable() {
     setMaterialFilter,
     setCompanyFilter,
     setDateFilter,
+    setDateRangeFilter,
     resetFilters,
     handleSort,
     setPage,
@@ -217,19 +224,10 @@ export default function FleetTable() {
     (params.tankerType && params.tankerType !== "ALL" ? 1 : 0) +
     (params.material && params.material !== "ALL" ? 1 : 0) +
     (params.company && params.company !== "ALL" ? 1 : 0) +
-    (params.date && params.date.trim() ? 1 : 0);
+    (params.startDate || params.endDate || (params.date && params.date.trim()) ? 1 : 0);
 
   const startEntry = total === 0 ? 0 : (page - 1) * pageSize + 1;
   const endEntry = Math.min(page * pageSize, total);
-
-  // Common sample dates for quick filtering presets in fleet records
-  const fleetDatePresets = [
-    { label: "2025-07-18 (Service)", value: "2025-07-18" },
-    { label: "2025-07-10", value: "2025-07-10" },
-    { label: "2025-07-02", value: "2025-07-02" },
-    { label: "2025-06-28", value: "2025-06-28" },
-    { label: "2025-06-15", value: "2025-06-15" },
-  ];
 
   const handleDelete = async (id: string) => {
     await deleteVehicle(id);
@@ -250,119 +248,15 @@ export default function FleetTable() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5">
-          {/* Dedicated Calendar / Date Filter Popover */}
-          <div className="relative" ref={dateDropdownRef}>
-            <button
-              onClick={() => setShowDateDropdown(!showDateDropdown)}
-              className={`flex items-center gap-1.5 h-9 rounded-xl border px-3 text-xs font-semibold transition cursor-pointer ${
-                params.date
-                  ? "border-[#38BDF8]/60 bg-[#38BDF8]/15 text-[#38BDF8] ring-1 ring-[#38BDF8]/30"
-                  : showDateDropdown
-                  ? "border-[#FFA500]/50 bg-[#FFA500]/10 text-[#FFA500]"
-                  : "border-border bg-background text-foreground hover:bg-muted"
-              }`}
-              title="Filter fleet vehicles by service / registration date"
-            >
-              <Calendar size={13} className={params.date ? "text-[#38BDF8]" : "text-muted-foreground"} />
-              <span>{params.date ? params.date : "Date"}</span>
-              {params.date && (
-                <span
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setDateFilter("");
-                  }}
-                  className="ml-0.5 rounded p-0.5 hover:bg-[#38BDF8]/20 hover:text-white"
-                  title="Clear Date"
-                >
-                  <X size={11} />
-                </span>
-              )}
-            </button>
-
-            {/* Calendar Popover Menu */}
-            {showDateDropdown && (
-              <div className="absolute right-0 mt-1.5 w-64 rounded-2xl border border-border bg-card p-3.5 shadow-2xl z-40 animate-in fade-in zoom-in-95 duration-150">
-                <div className="flex items-center justify-between pb-2 border-b border-border mb-2.5">
-                  <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
-                    <Calendar size={13} className="text-[#FFA500]" />
-                    <span>Filter by Service Date</span>
-                  </span>
-                  {params.date && (
-                    <button
-                      onClick={() => {
-                        setDateFilter("");
-                        setShowDateDropdown(false);
-                      }}
-                      className="text-[10px] text-[#FFA500] hover:underline cursor-pointer"
-                    >
-                      Clear
-                    </button>
-                  )}
-                </div>
-
-                {/* Specific Date Picker Input */}
-                <div className="mb-3">
-                  <label className="block text-[11px] font-medium text-muted-foreground mb-1.5">
-                    Choose Specific Date:
-                  </label>
-                  <input
-                    type="date"
-                    value={params.date || ""}
-                    onChange={(e) => {
-                      setDateFilter(e.target.value);
-                      setShowDateDropdown(false);
-                    }}
-                    className="h-8.5 w-full rounded-lg border border-border bg-background px-2.5 text-xs text-foreground outline-none focus:border-[#FFA500] cursor-pointer"
-                  />
-                </div>
-
-                {/* Quick Date Shortcuts */}
-                <div>
-                  <span className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
-                    Quick Service Dates
-                  </span>
-                  <div className="space-y-1">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setDateFilter("");
-                        setShowDateDropdown(false);
-                      }}
-                      className={`flex w-full items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition cursor-pointer ${
-                        !params.date
-                          ? "bg-[#FFA500]/15 text-[#FFA500] font-semibold border border-[#FFA500]/30"
-                          : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                      }`}
-                    >
-                      <span>All Dates (Show All)</span>
-                      {!params.date && <Check size={12} className="text-[#FFA500]" />}
-                    </button>
-
-                    {fleetDatePresets.map((preset) => {
-                      const isSelected = params.date === preset.value;
-                      return (
-                        <button
-                          key={preset.value}
-                          type="button"
-                          onClick={() => {
-                            setDateFilter(preset.value);
-                            setShowDateDropdown(false);
-                          }}
-                          className={`flex w-full items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition cursor-pointer ${
-                            isSelected
-                              ? "bg-[#38BDF8]/15 text-[#38BDF8] font-semibold border border-[#38BDF8]/30"
-                              : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                          }`}
-                        >
-                          <span>{preset.label}</span>
-                          {isSelected && <Check size={12} className="text-[#38BDF8]" />}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-            )}
+          {/* Dedicated Date Range Filter */}
+          <div className="w-48 sm:w-56">
+            <DateRangePicker
+              startDate={params.startDate}
+              endDate={params.endDate}
+              singleDate={params.date}
+              onRangeChange={(start, end) => setDateRangeFilter(start, end)}
+              placeholder="Date Range"
+            />
           </div>
 
           {/* Column Selection Dropdown */}
@@ -471,7 +365,7 @@ export default function FleetTable() {
           <button
             onClick={() => refresh()}
             disabled={loading}
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-background text-foreground hover:bg-muted transition cursor-pointer disabled:opacity-50"
+            className="flex h-9 w-9 min-w-[36px] items-center justify-center rounded-full aspect-square border border-border bg-background text-foreground hover:bg-muted transition cursor-pointer disabled:opacity-50"
             title="Refresh Fleet Data"
           >
             <RefreshCw size={14} className={loading ? "animate-spin text-[#FFA500]" : ""} />
@@ -562,7 +456,7 @@ export default function FleetTable() {
             )}
           </div>
 
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
             {/* Tanker Type Filter */}
             <div>
               <label className="block text-[11px] font-medium text-muted-foreground mb-1">
@@ -571,7 +465,7 @@ export default function FleetTable() {
               <select
                 value={params.tankerType || "ALL"}
                 onChange={(e) => setTankerTypeFilter(e.target.value)}
-                className="h-8 w-full rounded-lg border border-border bg-background px-2.5 text-xs text-foreground outline-none focus:border-[#FFA500]"
+                className="h-8.5 w-full rounded-lg border border-border bg-background px-2.5 text-xs text-foreground outline-none focus:border-[#FFA500]"
               >
                 <option value="ALL">All Tanker Types</option>
                 <option value="Chemical Tanker">Chemical Tanker</option>
@@ -589,7 +483,7 @@ export default function FleetTable() {
               <select
                 value={params.material || "ALL"}
                 onChange={(e) => setMaterialFilter(e.target.value)}
-                className="h-8 w-full rounded-lg border border-border bg-background px-2.5 text-xs text-foreground outline-none focus:border-[#FFA500]"
+                className="h-8.5 w-full rounded-lg border border-border bg-background px-2.5 text-xs text-foreground outline-none focus:border-[#FFA500]"
               >
                 <option value="ALL">All Materials</option>
                 <option value="Chemical">Chemical</option>
@@ -599,78 +493,37 @@ export default function FleetTable() {
               </select>
             </div>
 
-            {/* Company Filter */}
-            <div>
-              <label className="block text-[11px] font-medium text-muted-foreground mb-1">
-                Operating Company
-              </label>
-              <select
-                value={params.company || "ALL"}
-                onChange={(e) => setCompanyFilter(e.target.value)}
-                className="h-8 w-full rounded-lg border border-border bg-background px-2.5 text-xs text-foreground outline-none focus:border-[#FFA500]"
+            {/* Operating Company Autocomplete Filter */}
+            <AutocompleteFilter
+              label="Operating Company"
+              value={params.company || "ALL"}
+              onChange={(val) => setCompanyFilter(val)}
+              options={COMPANY_FILTER_OPTIONS}
+              allOptionLabel="All Companies"
+              placeholder="Search company, hub..."
+              icon={<Building2 size={13} />}
+            />
+
+            {/* Service / Reg. Date Range Filter */}
+            <DateRangePicker
+              label="Service / Reg. Date"
+              startDate={params.startDate}
+              endDate={params.endDate}
+              singleDate={params.date}
+              onRangeChange={(start, end) => setDateRangeFilter(start, end)}
+              placeholder="All Dates"
+            />
+
+            {/* Reset Filters Action Button */}
+            <div className="flex items-end">
+              <button
+                type="button"
+                onClick={resetFilters}
+                className="h-8.5 w-full rounded-lg border border-border bg-background text-xs font-semibold text-muted-foreground hover:bg-muted hover:text-foreground transition cursor-pointer"
               >
-                <option value="ALL">All Companies</option>
-                <option value="ChemCorp Ltd">ChemCorp Ltd</option>
-                <option value="HazWaste Solutions">HazWaste Solutions</option>
-                <option value="AquaTech Pvt Ltd">AquaTech Pvt Ltd</option>
-                <option value="EcoWaste Corp">EcoWaste Corp</option>
-                <option value="IndusChem Ltd">IndusChem Ltd</option>
-              </select>
+                Reset All Filters
+              </button>
             </div>
-
-            {/* Service Date Filter */}
-            <div>
-              <label className="block text-[11px] font-medium text-muted-foreground mb-1 flex items-center justify-between">
-                <span>Service / Reg. Date</span>
-                {params.date && (
-                  <button
-                    onClick={() => setDateFilter("")}
-                    className="text-[10px] text-[#FFA500] hover:underline cursor-pointer"
-                  >
-                    Clear
-                  </button>
-                )}
-              </label>
-              <input
-                type="date"
-                value={params.date || ""}
-                onChange={(e) => setDateFilter(e.target.value)}
-                className="h-8 w-full rounded-lg border border-border bg-background px-2.5 text-xs text-foreground outline-none focus:border-[#FFA500]"
-              />
-            </div>
-          </div>
-
-          {/* Quick Service Date Presets */}
-          <div className="mt-2.5 pt-2 border-t border-border flex flex-wrap items-center gap-1.5 text-[11px]">
-            <span className="text-muted-foreground mr-1">Quick Date:</span>
-            <button
-              type="button"
-              onClick={() => setDateFilter("")}
-              className={`px-2 py-0.5 rounded-md transition cursor-pointer ${
-                !params.date
-                  ? "bg-[#FFA500] text-[#071522] font-semibold"
-                  : "bg-background text-muted-foreground hover:text-foreground border border-border"
-              }`}
-            >
-              All Dates
-            </button>
-            {fleetDatePresets.map((preset) => {
-              const isSelected = params.date === preset.value;
-              return (
-                <button
-                  key={preset.value}
-                  type="button"
-                  onClick={() => setDateFilter(preset.value)}
-                  className={`px-2 py-0.5 rounded-md transition cursor-pointer ${
-                    isSelected
-                      ? "bg-[#FFA500] text-[#071522] font-semibold"
-                      : "bg-background text-muted-foreground hover:text-foreground border border-border"
-                  }`}
-                >
-                  {preset.label}
-                </button>
-              );
-            })}
           </div>
         </div>
       )}
@@ -972,20 +825,20 @@ export default function FleetTable() {
         </div>
 
         {/* Right: Page Numbers & Prev/Next */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1.5">
           <button
             onClick={() => setPage(page - 1)}
             disabled={page <= 1}
-            className="rounded-lg border border-border bg-background px-2.5 py-1 text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-40 cursor-pointer transition"
+            className="flex h-8 w-8 min-w-[32px] items-center justify-center rounded-full aspect-square border border-border bg-background text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-40 cursor-pointer transition"
           >
-            Prev
+            <ChevronLeft size={15} />
           </button>
 
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
             <button
               key={p}
               onClick={() => setPage(p)}
-              className={`h-7 w-7 rounded-lg text-xs font-semibold transition cursor-pointer ${
+              className={`flex h-8 w-8 min-w-[32px] items-center justify-center rounded-full aspect-square text-xs font-bold transition cursor-pointer ${
                 page === p
                   ? "bg-[#FFA500] text-[#071522] shadow-sm shadow-orange-500/20"
                   : "border border-border bg-background text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -998,9 +851,9 @@ export default function FleetTable() {
           <button
             onClick={() => setPage(page + 1)}
             disabled={page >= totalPages}
-            className="rounded-lg border border-border bg-background px-2.5 py-1 text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-40 cursor-pointer transition"
+            className="flex h-8 w-8 min-w-[32px] items-center justify-center rounded-full aspect-square border border-border bg-background text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-40 cursor-pointer transition"
           >
-            Next
+            <ChevronRight size={15} />
           </button>
         </div>
       </div>
