@@ -8,6 +8,7 @@ import {
   Menu,
   Search,
   Shield,
+  ShieldCheck,
   Sliders,
   User,
   X,
@@ -113,7 +114,7 @@ export default function TopNavbar({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search anything..."
-            className="h-9 w-full rounded-full border border-border bg-muted/50 pl-9 pr-3 text-xs text-foreground placeholder:text-muted-foreground outline-none transition focus:border-[#FFA500] focus:ring-1 focus:ring-[#FFA500]/25"
+            className="h-9 w-full rounded-full border border-border bg-muted/50 pl-9 pr-3 text-xs text-foreground placeholder:text-muted-foreground outline-none transition focus:border-primary focus:ring-1 focus:ring-primary/25"
           />
           {searchQuery && (
             <button
@@ -134,7 +135,7 @@ export default function TopNavbar({
           >
             <Bell size={16} />
             {/* Unread badge dot */}
-            <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-[#FFA500] ring-2 ring-card" />
+            <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-primary ring-2 ring-card" />
           </button>
 
           {/* Notifications Dropdown Popover */}
@@ -145,13 +146,13 @@ export default function TopNavbar({
                   <span className="text-xs font-semibold text-foreground">
                     Notifications
                   </span>
-                  <span className="rounded-full bg-[#FFA500]/10 px-2 py-0.5 text-[10px] font-semibold text-[#FFA500]">
+                  <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
                     2 new
                   </span>
                 </div>
                 <button
                   onClick={() => setShowNotifications(false)}
-                  className="text-[11px] text-[#FFA500] hover:underline cursor-pointer"
+                  className="text-[11px] text-primary hover:underline cursor-pointer"
                 >
                   Mark all read
                 </button>
@@ -161,10 +162,11 @@ export default function TopNavbar({
                 {notifications.map((n) => (
                   <div
                     key={n.id}
-                    className={`rounded-xl p-2.5 transition text-xs ${n.unread
+                    className={`rounded-xl p-2.5 transition text-xs ${
+                      n.unread
                         ? "bg-muted/80 border border-border"
                         : "hover:bg-muted/40"
-                      }`}
+                    }`}
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-semibold text-foreground">
@@ -192,7 +194,7 @@ export default function TopNavbar({
             className="flex items-center gap-2 rounded-full cursor-pointer focus:outline-none"
             aria-label="User profile menu"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#FFA500] text-[#071522] font-bold text-xs shadow-md shadow-orange-500/20 transition hover:scale-105">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-xs shadow-md shadow-amber-500/20 transition hover:scale-105">
               SA
             </div>
           </button>
@@ -232,11 +234,21 @@ export default function TopNavbar({
                   <span>Portal Preferences</span>
                 </Link>
 
+                {/* Capability Menu Option */}
+                <Link
+                  href="/dashboard/capabilities"
+                  onClick={() => setShowProfileMenu(false)}
+                  className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-muted-foreground hover:bg-muted hover:text-foreground transition"
+                >
+                  <ShieldCheck size={14} className="text-primary" />
+                  <span>Role Capabilities</span>
+                </Link>
+
                 <div className="border-t border-border my-1" />
 
                 <Link
                   href="/login"
-                  className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-[#EF4444] hover:bg-destructive/10 transition"
+                  className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-destructive hover:bg-destructive/10 transition"
                 >
                   <LogOut size={14} />
                   <span>Sign Out</span>

@@ -1,7 +1,4 @@
-/**
- * General Reusable Export Utilities for FluidLogix
- * Supports CSV, JSON, and Branded PDF Generation
- */
+import { THEME_COLORS } from "./themeTokens";
 
 export interface ExportColumn<T> {
   header: string;
@@ -128,7 +125,7 @@ export function exportToPDF<T>({
   const thHtml = columns
     .map(
       (col) =>
-        `<th style="padding: 10px 12px; font-weight: 700; text-align: left; background-color: #0E2235; color: #FFA500; border-bottom: 2px solid #FFA500; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">${col.header}</th>`
+        `<th style="padding: 10px 12px; font-weight: 700; text-align: left; background-color: ${THEME_COLORS.brandNavy}; color: ${THEME_COLORS.primary}; border-bottom: 2px solid ${THEME_COLORS.primary}; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">${col.header}</th>`
     )
     .join("");
 
@@ -214,7 +211,7 @@ export function exportToPDF<T>({
           display: flex;
           justify-content: space-between;
           align-items: center;
-          border-bottom: 3px solid #FFA500;
+          border-bottom: 3px solid ${THEME_COLORS.primary};
           padding-bottom: 12px;
           margin-bottom: 16px;
         }
@@ -224,8 +221,8 @@ export function exportToPDF<T>({
           gap: 10px;
         }
         .logo-box {
-          background: linear-gradient(135deg, #FFA500, #FF8C00);
-          color: #071522;
+          background: ${THEME_COLORS.primary};
+          color: ${THEME_COLORS.primaryForeground};
           width: 36px;
           height: 36px;
           border-radius: 10px;
@@ -238,7 +235,7 @@ export function exportToPDF<T>({
         .brand-title {
           font-size: 20px;
           font-weight: 800;
-          color: #071522;
+          color: ${THEME_COLORS.brandNavy};
           line-height: 1;
         }
         .brand-tag {
@@ -253,7 +250,7 @@ export function exportToPDF<T>({
         .report-title {
           font-size: 18px;
           font-weight: 800;
-          color: #071522;
+          color: ${THEME_COLORS.brandNavy};
           margin: 0;
         }
         .report-sub {

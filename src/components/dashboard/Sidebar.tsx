@@ -66,7 +66,7 @@ export default function Sidebar({
       <div>
         <div className="flex items-center justify-between px-2 pb-6">
           <Link href="/dashboard" className="flex items-center gap-3 group">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#FFA500] to-[#FF8C00] text-[#071522] shadow-sm shadow-orange-500/20 transition group-hover:scale-105">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm shadow-amber-500/20 transition group-hover:scale-105">
               <Droplets size={18} className="stroke-[2.5]" />
             </div>
 
@@ -106,15 +106,17 @@ export default function Sidebar({
                 key={item.name}
                 href={item.href}
                 onClick={onCloseMobile}
-                className={`group flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-medium transition-all duration-150 ${isActive
-                    ? "bg-[#FFA500]/10 text-[#FFA500] shadow-[0_0_15px_rgba(255,165,0,0.08)] border border-[#FFA500]/25"
+                className={`group flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-medium transition-all duration-150 ${
+                  isActive
+                    ? "bg-primary/10 text-primary shadow-[0_0_15px_rgba(255,165,0,0.08)] border border-primary/25 font-bold"
                     : "text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground border border-transparent"
-                  }`}
+                }`}
               >
                 <Icon
                   size={18}
-                  className={`transition-colors ${isActive ? "text-[#FFA500]" : "text-muted-foreground group-hover:text-[#FFA500]"
-                    }`}
+                  className={`transition-colors ${
+                    isActive ? "text-primary" : "text-muted-foreground group-hover:text-primary"
+                  }`}
                 />
                 <span>{item.name}</span>
               </Link>
@@ -130,11 +132,11 @@ export default function Sidebar({
           onClick={onCloseMobile}
           className={`flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-medium transition ${
             pathname === "/dashboard/profile"
-              ? "bg-[#FFA500]/10 text-[#FFA500] border border-[#FFA500]/25"
+              ? "bg-primary/10 text-primary border border-primary/25 font-bold"
               : "text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
           }`}
         >
-          <User size={18} className={pathname === "/dashboard/profile" ? "text-[#FFA500]" : "text-muted-foreground"} />
+          <User size={18} className={pathname === "/dashboard/profile" ? "text-primary" : "text-muted-foreground"} />
           <span>Admin Profile</span>
         </Link>
 
@@ -143,19 +145,19 @@ export default function Sidebar({
           onClick={onCloseMobile}
           className={`flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-medium transition ${
             pathname === "/dashboard/settings"
-              ? "bg-[#FFA500]/10 text-[#FFA500] border border-[#FFA500]/25"
+              ? "bg-primary/10 text-primary border border-primary/25 font-bold"
               : "text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
           }`}
         >
-          <Settings size={18} className={pathname === "/dashboard/settings" ? "text-[#FFA500]" : "text-muted-foreground"} />
+          <Settings size={18} className={pathname === "/dashboard/settings" ? "text-primary" : "text-muted-foreground"} />
           <span>Settings</span>
         </Link>
 
         <Link
           href="/login"
-          className="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-medium text-muted-foreground hover:bg-destructive/10 hover:text-[#EF4444] transition"
+          className="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-medium text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition"
         >
-          <LogOut size={18} className="text-muted-foreground group-hover:text-[#EF4444]" />
+          <LogOut size={18} className="text-muted-foreground group-hover:text-destructive" />
           <span>Sign Out</span>
         </Link>
       </div>

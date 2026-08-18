@@ -9,7 +9,7 @@ export default function ProfilePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-background text-foreground transition-colors duration-200 flex selection:bg-[#FFA500] selection:text-[#071522]">
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-200 flex selection:bg-primary selection:text-primary-foreground">
       {/* Sidebar */}
       <Sidebar
         mobileOpen={mobileMenuOpen}

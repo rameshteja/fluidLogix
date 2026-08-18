@@ -8,8 +8,24 @@
   --card-foreground: #0f172a;
   --popover: #ffffff;
   --popover-foreground: #0f172a;
-  --primary: #f59e0b;
-  --primary-foreground: #0b1622;
+  
+  /* ==========================================================================
+     PRIMARY BRAND COLOR THEME TOKENS
+     To change the entire site primary color, simply change --primary and --primary-hover here!
+     ========================================================================== */
+  --primary: #FFA500;
+  --primary-hover: #FFB733;
+  --primary-active: #E69500;
+  --primary-foreground: #071522;
+  --primary-muted: rgba(255, 165, 0, 0.12);
+  --primary-border: rgba(255, 165, 0, 0.25);
+  
+  /* Brand Constants */
+  --brand-navy: #071522;
+  --brand-navy-light: #0f1f30;
+  --brand-amber: #FFA500;
+  --brand-blue: #38BDF8;
+
   --secondary: #e2e8f0;
   --secondary-foreground: #1e293b;
   --muted: #f1f5f9;
@@ -18,14 +34,18 @@
   --accent-foreground: #ffffff;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
+  --success: #10b981;
+  --success-foreground: #ffffff;
+  --warning: #f59e0b;
+  --warning-foreground: #071522;
   --border: #e2e8f0;
   --input: #ffffff;
   --input-background: #f1f5f9;
   --switch-background: #cbd5e1;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: rgba(245, 158, 11, 0.4);
-  --chart-1: #f59e0b;
+  --ring: rgba(255, 165, 0, 0.4);
+  --chart-1: #FFA500;
   --chart-2: #38bdf8;
   --chart-3: #10b981;
   --chart-4: #ef4444;
@@ -33,12 +53,12 @@
   --radius: 0.75rem;
   --sidebar: #ffffff;
   --sidebar-foreground: #0f172a;
-  --sidebar-primary: #f59e0b;
-  --sidebar-primary-foreground: #0b1622;
+  --sidebar-primary: #FFA500;
+  --sidebar-primary-foreground: #071522;
   --sidebar-accent: #f1f5f9;
   --sidebar-accent-foreground: #0f172a;
   --sidebar-border: #e2e8f0;
-  --sidebar-ring: rgba(245, 158, 11, 0.4);
+  --sidebar-ring: rgba(255, 165, 0, 0.4);
 }
 
 .light {
@@ -48,8 +68,12 @@
   --card-foreground: #0f172a;
   --popover: #ffffff;
   --popover-foreground: #0f172a;
-  --primary: #f59e0b;
-  --primary-foreground: #0b1622;
+  --primary: #FFA500;
+  --primary-hover: #FFB733;
+  --primary-active: #E69500;
+  --primary-foreground: #071522;
+  --primary-muted: rgba(255, 165, 0, 0.12);
+  --primary-border: rgba(255, 165, 0, 0.25);
   --secondary: #e2e8f0;
   --secondary-foreground: #1e293b;
   --muted: #f1f5f9;
@@ -58,26 +82,30 @@
   --accent-foreground: #ffffff;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
+  --success: #10b981;
+  --success-foreground: #ffffff;
+  --warning: #f59e0b;
+  --warning-foreground: #071522;
   --border: #cbd5e1;
   --input: #ffffff;
   --input-background: #f1f5f9;
   --switch-background: #cbd5e1;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: rgba(245, 158, 11, 0.4);
-  --chart-1: #f59e0b;
+  --ring: rgba(255, 165, 0, 0.4);
+  --chart-1: #FFA500;
   --chart-2: #38bdf8;
   --chart-3: #10b981;
   --chart-4: #ef4444;
   --chart-5: #a78bfa;
   --sidebar: #ffffff;
   --sidebar-foreground: #0f172a;
-  --sidebar-primary: #f59e0b;
-  --sidebar-primary-foreground: #0b1622;
+  --sidebar-primary: #FFA500;
+  --sidebar-primary-foreground: #071522;
   --sidebar-accent: #f1f5f9;
   --sidebar-accent-foreground: #0f172a;
   --sidebar-border: #e2e8f0;
-  --sidebar-ring: rgba(245, 158, 11, 0.4);
+  --sidebar-ring: rgba(255, 165, 0, 0.4);
 }
 
 .dark {
@@ -87,36 +115,44 @@
   --card-foreground: #e2e8f0;
   --popover: #0f1f30;
   --popover-foreground: #e2e8f0;
-  --primary: #f59e0b;
-  --primary-foreground: #0b1622;
+  --primary: #FFA500;
+  --primary-hover: #FFB733;
+  --primary-active: #E69500;
+  --primary-foreground: #071522;
+  --primary-muted: rgba(255, 165, 0, 0.14);
+  --primary-border: rgba(255, 165, 0, 0.28);
   --secondary: #1d3a5c;
   --secondary-foreground: #93c5fd;
   --muted: #162234;
   --muted-foreground: #64748b;
   --accent: #38bdf8;
-  --accent-foreground: #0b1622;
+  --accent-foreground: #071522;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
+  --success: #10b981;
+  --success-foreground: #ffffff;
+  --warning: #f59e0b;
+  --warning-foreground: #071522;
   --border: rgba(255, 255, 255, 0.07);
   --input: #162234;
   --input-background: #162234;
   --switch-background: #1d3a5c;
-  --ring: rgba(245, 158, 11, 0.4);
+  --ring: rgba(255, 165, 0, 0.4);
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --chart-1: #f59e0b;
+  --chart-1: #FFA500;
   --chart-2: #38bdf8;
   --chart-3: #10b981;
   --chart-4: #ef4444;
   --chart-5: #a78bfa;
   --sidebar: #0f1f30;
   --sidebar-foreground: #e2e8f0;
-  --sidebar-primary: #f59e0b;
-  --sidebar-primary-foreground: #0b1622;
+  --sidebar-primary: #FFA500;
+  --sidebar-primary-foreground: #071522;
   --sidebar-accent: #162234;
   --sidebar-accent-foreground: #e2e8f0;
   --sidebar-border: rgba(255, 255, 255, 0.07);
-  --sidebar-ring: rgba(245, 158, 11, 0.4);
+  --sidebar-ring: rgba(255, 165, 0, 0.4);
 }
 
 @theme inline {
@@ -127,7 +163,15 @@
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-active: var(--primary-active);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-muted: var(--primary-muted);
+  --color-primary-border: var(--primary-border);
+  --color-brand-navy: var(--brand-navy);
+  --color-brand-navy-light: var(--brand-navy-light);
+  --color-brand-amber: var(--brand-amber);
+  --color-brand-blue: var(--brand-blue);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
@@ -136,6 +180,10 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-input-background: var(--input-background);

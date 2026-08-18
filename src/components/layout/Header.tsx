@@ -49,11 +49,11 @@ export default function Header() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 lg:px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#FFA500] text-[#071522] shadow-sm group-hover:scale-105 transition-transform">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm group-hover:scale-105 transition-transform">
             <Droplets size={18} className="text-primary-foreground" />
           </div>
 
-          <span className="text-lg font-bold tracking-tight text-foreground group-hover:text-[#FFA500] transition-colors">
+          <span className="text-lg font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
             FluidLogix
           </span>
         </Link>
@@ -70,7 +70,7 @@ export default function Header() {
                   href={item.href}
                   className={`text-xs lg:text-sm transition-all duration-150 relative py-1 ${
                     active
-                      ? "text-[#FFA500] font-bold after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-[#FFA500] after:rounded-full"
+                      ? "text-primary font-bold after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-0.5 after:bg-primary after:rounded-full"
                       : "text-muted-foreground font-medium hover:text-foreground"
                   }`}
                 >
@@ -96,7 +96,7 @@ export default function Header() {
           <ThemeToggle align="right" />
           <Link
             href="/login"
-            className="flex items-center gap-2 rounded-full bg-[#FFA500] px-5 py-2 text-xs lg:text-sm font-bold text-[#071522] transition hover:bg-[#FFB52E] shadow-sm shadow-orange-500/20 hover:scale-102"
+            className="flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-xs lg:text-sm font-bold text-primary-foreground transition hover:bg-primary-hover shadow-sm shadow-amber-500/20 hover:scale-102"
           >
             Sign In
             <ArrowRight size={15} />
@@ -131,7 +131,7 @@ export default function Header() {
                     onClick={() => setMobileOpen(false)}
                     className={`text-sm font-semibold px-3 py-2.5 rounded-xl transition ${
                       active
-                        ? "bg-[#FFA500]/15 text-[#FFA500] font-bold border border-[#FFA500]/30"
+                        ? "bg-primary/15 text-primary font-bold border border-primary/30"
                         : "text-muted-foreground hover:text-foreground hover:bg-muted"
                     }`}
                   >
@@ -154,7 +154,7 @@ export default function Header() {
 
             <Link
               href="/login"
-              className="mt-3 flex items-center justify-center gap-2 rounded-xl bg-[#FFA500] px-5 py-2.5 text-xs font-bold text-[#071522]"
+              className="mt-3 flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-xs font-bold text-primary-foreground"
             >
               Sign In to Portal
               <ArrowRight size={15} />
