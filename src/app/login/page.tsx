@@ -8,6 +8,7 @@ import {
   Zap,
 } from "lucide-react";
 import Link from "next/link";
+import { Suspense } from "react";
 import LoginForm from "@/components/auth/LoginForm";
 import ThemeToggle from "@/components/theme/ThemeToggle";
 
@@ -154,7 +155,21 @@ export default function LoginPage() {
 
           {/* Centered Login Form Card */}
           <div className="relative z-10 my-auto w-full">
-            <LoginForm />
+            <Suspense
+              fallback={
+                <div className="w-full max-w-[400px] mx-auto p-6 flex flex-col items-center justify-center space-y-4 rounded-2xl border border-border bg-card/60 backdrop-blur">
+                  <div className="h-9 w-9 rounded-xl bg-primary/20 animate-pulse flex items-center justify-center text-primary">
+                    <Droplets size={18} className="animate-spin" />
+                  </div>
+                  <div className="h-4 w-32 bg-muted rounded animate-pulse" />
+                  <div className="h-10 w-full bg-muted/40 rounded-xl animate-pulse" />
+                  <div className="h-10 w-full bg-muted/40 rounded-xl animate-pulse" />
+                  <div className="h-10 w-full bg-primary/20 rounded-xl animate-pulse" />
+                </div>
+              }
+            >
+              <LoginForm />
+            </Suspense>
           </div>
 
           {/* Mobile Footer Note */}
