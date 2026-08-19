@@ -7,6 +7,7 @@ import axios, {
 } from "axios";
 import { API_BASE_URL, APP_CONFIG, HTTP_METHODS, HttpMethod, STORAGE_KEYS } from "./constant";
 import { INITIAL_ROLES, CAPABILITY_CATEGORIES } from "@/data/capability-data";
+import { notify } from "./toast";
 
 /**
  * Standardized NestJS API Response Structure
@@ -41,6 +42,9 @@ export interface CallApiOptions<TData = any> {
   responseType?: AxiosRequestConfig["responseType"];
   onUploadProgress?: (progressEvent: any) => void;
   useMockFallback?: boolean; // Default true when backend is offline
+  showToast?: boolean; // Automatic toast notification for POST/PUT/PATCH/DELETE
+  successMessage?: string; // Custom toast success message
+  errorMessage?: string; // Custom toast error message
 }
 
 /**
@@ -359,8 +363,14 @@ export async function CallAPI<TResponse = any, TBody = any>({
 
     // Normalize NestJS response
     const resData = response.data;
+    const isMutation = ["POST", "PUT", "PATCH", "DELETE"].includes(normalizedMethod);
 
     if (resData && typeof resData === "object" && ("data" in resData || "success" in resData)) {
+      const finalMsg = resData.message || (isMutation ? `Action completed successfully.` : undefined);
+      if (isMutation && finalMsg) {
+        notify.success(finalMsg);
+      }
+
       return {
         success: resData.success !== false,
         statusCode: resData.statusCode || response.status,
@@ -369,6 +379,10 @@ export async function CallAPI<TResponse = any, TBody = any>({
         meta: resData.meta,
         error: resData.error,
       };
+    }
+
+    if (isMutation) {
+      notify.success(`${normalizedMethod} request succeeded.`);
     }
 
     return {
@@ -385,8 +399,15 @@ export async function CallAPI<TResponse = any, TBody = any>({
         "color: #FFA500; font-weight: bold;",
         "color: inherit;"
       );
-      return generateDummyDataResponse<TResponse>(endpoint, normalizedMethod, data, params);
+      const mockResult = generateDummyDataResponse<TResponse>(endpoint, normalizedMethod, data, params);
+      if (["POST", "PUT", "PATCH", "DELETE"].includes(normalizedMethod) && mockResult.message) {
+        notify.success(mockResult.message);
+      }
+      return mockResult;
     }
+
+    const errMsg = err.message || "An unexpected error occurred.";
+    notify.error(errMsg);
 
     if (err instanceof ApiError) {
       return {
