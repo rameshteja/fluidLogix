@@ -6,6 +6,7 @@ import {
   Calendar,
   CheckCircle2,
   CreditCard,
+  Droplets,
   Eye,
   FileCheck,
   FileText,
@@ -200,6 +201,15 @@ export default function ViewUserModal({
               </div>
             )}
 
+            {user.companyType && (
+              <div className="space-y-1">
+                <span className="flex items-center gap-1.5 text-muted-foreground font-medium">
+                  <Building2 size={13} className="text-primary" /> Company Type
+                </span>
+                <p className="font-semibold text-[#FFA500]">{user.companyType}</p>
+              </div>
+            )}
+
             {user.fleetSize !== undefined && (
               <div className="space-y-1">
                 <span className="flex items-center gap-1.5 text-muted-foreground font-medium">
@@ -216,6 +226,26 @@ export default function ViewUserModal({
               <p className="font-semibold text-foreground">{user.dateRegistered}</p>
             </div>
           </div>
+
+          {/* ================= COMPANY MATERIAL TYPES SECTION ================= */}
+          {user.materialTypes && user.materialTypes.length > 0 && (
+            <div className="space-y-2 pt-1">
+              <span className="font-bold text-foreground flex items-center gap-1.5 text-xs">
+                <Droplets size={14} className="text-[#FFA500]" />
+                <span>Handled Cargo Material Categories ({user.materialTypes.length})</span>
+              </span>
+              <div className="flex flex-wrap gap-1.5">
+                {user.materialTypes.map((mat) => (
+                  <span
+                    key={mat}
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold border border-[#FFA500]/30 bg-[#FFA500]/10 text-[#FFA500]"
+                  >
+                    <span>{mat}</span>
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* ================= UPLOADED KYC DOCUMENTS SECTION ================= */}
           <div className="space-y-3 pt-2">

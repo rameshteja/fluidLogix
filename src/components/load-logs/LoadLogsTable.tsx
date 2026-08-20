@@ -282,7 +282,7 @@ export default function LoadLogsTable() {
     <div className="space-y-6">
       {/* Toast Alert */}
       {toastMessage && (
-        <div className="fixed bottom-5 right-5 z-50 flex items-center gap-2.5 rounded-xl border border-[#FFA500]/30 bg-card px-4 py-3 text-xs font-semibold text-foreground shadow-2xl animate-in slide-in-from-bottom-5 duration-200">
+        <div className="fixed top-6 right-6 z-[9999] flex items-center gap-2.5 rounded-2xl border border-[#FFA500]/40 bg-card/95 backdrop-blur-md px-4 py-3 text-xs font-bold text-foreground shadow-2xl animate-in slide-in-from-top-4 duration-200">
           <CheckCircle2 size={16} className="text-[#FFA500]" />
           <span>{toastMessage}</span>
         </div>

@@ -7,7 +7,9 @@ import {
   Landmark,
   LayoutGrid,
   LogOut,
+  PackageSearch,
   Settings,
+  Share2,
   Truck,
   User,
   Users,
@@ -21,6 +23,16 @@ const navItems = [
     name: "Overview",
     href: "/dashboard",
     icon: LayoutGrid,
+  },
+  {
+    name: "Load Requests",
+    href: "/dashboard/load-requests",
+    icon: PackageSearch,
+  },
+  {
+    name: "Allocations",
+    href: "/dashboard/assignments",
+    icon: Share2,
   },
   {
     name: "Fleet",

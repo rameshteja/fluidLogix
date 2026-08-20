@@ -66,12 +66,21 @@ export function validateVehicleForm(
     errors.tankerType = "Select tanker type";
   }
 
-  // 4. Capacity
+  // 4. Capacity & Compartments
+  if (data.compartments && data.compartments.length > 0) {
+    const invalidComp = data.compartments.some(
+      (c) => isNaN(c.capacity) || c.capacity <= 0
+    );
+    if (invalidComp) {
+      errors.compartments = "Each compartment must have a valid capacity greater than 0 L";
+    }
+  }
+
   const cap = Number(data.capacity);
   if (!data.capacity || isNaN(cap) || cap <= 0) {
     errors.capacity = "Enter a valid capacity in Liters (e.g. 20000)";
-  } else if (cap < 1000 || cap > 60000) {
-    errors.capacity = "Capacity must be between 1,000 L and 60,000 L";
+  } else if (cap < 1000 || cap > 80000) {
+    errors.capacity = "Total capacity must be between 1,000 L and 80,000 L";
   }
 
   // 5. Owner

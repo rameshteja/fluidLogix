@@ -20,6 +20,8 @@ export interface UserItem {
   fleetSize?: number; // For Owners
   activeFleetCount?: number; // For Companies
   contactPerson?: string; // For Companies
+  companyType?: string; // e.g. "Chemical Manufacturer", "Pharma Refinery", etc.
+  materialTypes?: string[]; // e.g. ["Chemical", "Hazardous", "Waste Water"]
   vehiclesCount?: number; // For Grid view cards
   driversCount?: number; // For Grid view cards
   bankAccount?: string; // For Grid view cards (e.g., "SBI ****4532")
@@ -47,6 +49,7 @@ export type UserSortField =
   | "assignedVehicle"
   | "company"
   | "owner"
+  | "companyType"
   | "vehiclesCount"
   | "driversCount"
   | "verified"
@@ -83,6 +86,8 @@ export interface UserFormData {
   owner?: string;
   fleetSize?: number;
   contactPerson?: string;
+  companyType?: string;
+  materialTypes?: string[];
   verified: UserVerificationStatus;
   status: UserStatus;
 
@@ -105,4 +110,7 @@ export interface UserFormErrors {
   company?: string;
   gstNumber?: string;
   panNumber?: string;
+  contactPerson?: string;
+  companyType?: string;
+  materialTypes?: string;
 }

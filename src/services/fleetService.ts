@@ -132,13 +132,13 @@ export const FleetService = {
       let aVal = a[sortBy];
       let bVal = b[sortBy];
 
-      if (typeof aVal === "string") {
-        aVal = aVal.toLowerCase();
-        bVal = (bVal as string).toLowerCase();
-      }
+      if (aVal === undefined || aVal === null) return 1;
+      if (bVal === undefined || bVal === null) return -1;
 
-      if (aVal === undefined) return 0;
-      if (bVal === undefined) return 0;
+      if (typeof aVal === "string" && typeof bVal === "string") {
+        aVal = aVal.toLowerCase();
+        bVal = bVal.toLowerCase();
+      }
 
       if (aVal < bVal) return sortOrder === "asc" ? -1 : 1;
       if (aVal > bVal) return sortOrder === "asc" ? 1 : -1;
@@ -181,19 +181,25 @@ export const FleetService = {
       id: formData.id.toUpperCase().trim(),
       plateNo: formData.plateNo.toUpperCase().trim(),
       tankerType: formData.tankerType,
+      bodyType: formData.bodyType || "MS",
       capacity: capNum,
       capacityDisplay: `${capNum.toLocaleString()} L`,
+      compartmentsCount: formData.compartmentsCount || formData.compartments?.length || 1,
+      compartments: formData.compartments || [{ compartmentNo: 1, capacity: capNum }],
       owner: formData.owner.trim(),
       driver: formData.driver.trim(),
       company: formData.company.trim(),
       material: formData.material,
       status: formData.status,
       lastServiceDate: formData.lastServiceDate || new Date().toISOString().split("T")[0],
-      registrationDate: new Date().toISOString().split("T")[0],
+      registrationDate: formData.registrationDate || new Date().toISOString().split("T")[0],
       pucExpiry: "2026-12-31",
       insuranceExpiry: "2026-12-31",
       gpsStatus: "Online",
       currentLocation: formData.currentLocation || "HQ Transport Depot Bay 1",
+      tankerImages: formData.tankerImages || [],
+      pollutionCertFile: formData.pollutionCertFile || null,
+      fitnessCertFile: formData.fitnessCertFile || null,
     };
 
     // Prepend to store
@@ -218,17 +224,24 @@ export const FleetService = {
       ...current,
       ...(formData.plateNo && { plateNo: formData.plateNo.toUpperCase().trim() }),
       ...(formData.tankerType && { tankerType: formData.tankerType }),
+      ...(formData.bodyType && { bodyType: formData.bodyType }),
       ...(formData.capacity !== undefined && {
         capacity: capNum,
         capacityDisplay: `${capNum.toLocaleString()} L`,
       }),
+      ...(formData.compartmentsCount !== undefined && { compartmentsCount: formData.compartmentsCount }),
+      ...(formData.compartments !== undefined && { compartments: formData.compartments }),
       ...(formData.owner && { owner: formData.owner.trim() }),
       ...(formData.driver && { driver: formData.driver.trim() }),
       ...(formData.company && { company: formData.company.trim() }),
       ...(formData.material && { material: formData.material }),
       ...(formData.status && { status: formData.status }),
+      ...(formData.registrationDate && { registrationDate: formData.registrationDate }),
       ...(formData.lastServiceDate && { lastServiceDate: formData.lastServiceDate }),
       ...(formData.currentLocation && { currentLocation: formData.currentLocation }),
+      ...(formData.tankerImages !== undefined && { tankerImages: formData.tankerImages }),
+      ...(formData.pollutionCertFile !== undefined && { pollutionCertFile: formData.pollutionCertFile }),
+      ...(formData.fitnessCertFile !== undefined && { fitnessCertFile: formData.fitnessCertFile }),
     };
 
     fleetStore[index] = updated;

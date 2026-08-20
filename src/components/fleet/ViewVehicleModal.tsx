@@ -143,7 +143,11 @@ export default function ViewVehicleModal({
               <div className="mt-1.5 text-xl font-bold text-foreground font-mono">
                 {vehicle.capacityDisplay}
               </div>
-              <span className="text-[10px] text-muted-foreground">Calibrated Tank Volume</span>
+              <span className="text-[10px] text-muted-foreground">
+                {vehicle.compartments && vehicle.compartments.length > 1
+                  ? `${vehicle.compartments.length} Separate Compartments`
+                  : "Single Chamber Tanker"}
+              </span>
             </div>
 
             <div className="rounded-xl border border-border bg-background p-3.5">
@@ -177,6 +181,36 @@ export default function ViewVehicleModal({
               <span className="text-[10px] text-muted-foreground">Live Tracking Active</span>
             </div>
           </div>
+
+          {/* Compartment Breakdown Card if multi-compartment */}
+          {vehicle.compartments && vehicle.compartments.length > 0 && (
+            <div className="rounded-xl border border-border bg-background p-4 space-y-2.5">
+              <div className="flex items-center justify-between text-xs font-bold text-foreground pb-2 border-b border-border">
+                <span className="flex items-center gap-1.5">
+                  <Gauge size={14} className="text-[#FFA500]" />
+                  <span>Tanker Compartments ({vehicle.compartments.length} Chambers)</span>
+                </span>
+                <span className="font-mono text-[11px] text-[#FFA500]">
+                  Total: {vehicle.capacity.toLocaleString()} L
+                </span>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {vehicle.compartments.map((comp) => (
+                  <div
+                    key={comp.compartmentNo}
+                    className="rounded-lg border border-border/80 bg-muted/20 p-2.5 text-center"
+                  >
+                    <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                      Compartment {comp.compartmentNo}
+                    </div>
+                    <div className="text-sm font-black font-mono text-foreground mt-0.5">
+                      {comp.capacity.toLocaleString()} L
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Location / Hub info */}
           <div className="rounded-xl border border-border bg-background p-3.5">
@@ -247,38 +281,73 @@ export default function ViewVehicleModal({
           </div>
 
           {/* Compliance & Maintenance Dates */}
-          <div className="rounded-xl border border-border bg-background p-4">
-            <div className="text-xs font-bold text-foreground pb-2.5 border-b border-border mb-3">
-              Compliance, PUC & Service Schedules
+          <div className="rounded-xl border border-border bg-background p-4 space-y-3">
+            <div className="text-xs font-bold text-foreground pb-2.5 border-b border-border">
+              Compliance, Body Specs & Service Schedules
             </div>
 
-            <div className="grid grid-cols-2 gap-4 text-xs sm:grid-cols-4">
+            <div className="grid grid-cols-2 gap-4 text-xs sm:grid-cols-5">
               <div>
-                <div className="text-[11px] text-muted-foreground">Last Service</div>
-                <div className="font-mono text-xs font-semibold text-foreground mt-0.5">
-                  {vehicle.lastServiceDate || "2025-06-15"}
-                </div>
-              </div>
-              <div>
-                <div className="text-[11px] text-muted-foreground">PUC Expiry</div>
-                <div className="font-mono text-xs font-semibold text-emerald-400 mt-0.5">
-                  {vehicle.pucExpiry || "2025-12-31"}
-                </div>
-              </div>
-              <div>
-                <div className="text-[11px] text-muted-foreground">Insurance Expiry</div>
-                <div className="font-mono text-xs font-semibold text-emerald-400 mt-0.5">
-                  {vehicle.insuranceExpiry || "2026-03-15"}
+                <div className="text-[11px] text-muted-foreground">Body Material</div>
+                <div className="font-semibold text-foreground mt-0.5">
+                  {vehicle.bodyType || "MS (Mild Steel)"}
                 </div>
               </div>
               <div>
                 <div className="text-[11px] text-muted-foreground">Registration Date</div>
-                <div className="font-mono text-xs font-semibold text-muted-foreground mt-0.5">
+                <div className="font-mono text-xs font-semibold text-foreground mt-0.5">
                   {vehicle.registrationDate || "2023-01-10"}
+                </div>
+              </div>
+              <div>
+                <div className="text-[11px] text-muted-foreground">PUC Certificate</div>
+                <div className="font-semibold text-emerald-400 mt-0.5 flex items-center gap-1">
+                  <CheckCircle2 size={12} />
+                  <span>{vehicle.pollutionCertFile ? "Uploaded (Valid)" : "Verified (2026)"}</span>
+                </div>
+              </div>
+              <div>
+                <div className="text-[11px] text-muted-foreground">Fitness Certificate</div>
+                <div className="font-semibold text-emerald-400 mt-0.5 flex items-center gap-1">
+                  <CheckCircle2 size={12} />
+                  <span>{vehicle.fitnessCertFile ? "Uploaded (Form 38)" : "Verified (Active)"}</span>
+                </div>
+              </div>
+              <div>
+                <div className="text-[11px] text-muted-foreground">Last Service</div>
+                <div className="font-mono text-xs font-semibold text-muted-foreground mt-0.5">
+                  {vehicle.lastServiceDate || "2025-06-15"}
                 </div>
               </div>
             </div>
           </div>
+
+          {/* Tanker Images Gallery if photos exist */}
+          {vehicle.tankerImages && vehicle.tankerImages.length > 0 && (
+            <div className="rounded-xl border border-border bg-background p-4 space-y-3">
+              <div className="text-xs font-bold text-foreground pb-2.5 border-b border-border flex items-center justify-between">
+                <span>Vehicle Fleet Photos ({vehicle.tankerImages.length})</span>
+                <span className="text-[10px] text-muted-foreground font-normal">Physical inspection records</span>
+              </div>
+              <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                {vehicle.tankerImages.map((img, idx) => {
+                  const url = typeof img === "string" ? img : img.url || "";
+                  const name = typeof img === "string" ? img : img.name || `Photo ${idx + 1}`;
+                  return (
+                    <div
+                      key={idx}
+                      className="aspect-4/3 rounded-lg overflow-hidden border border-border bg-card shadow-xs group relative"
+                    >
+                      <img src={url} alt={name} className="w-full h-full object-cover group-hover:scale-105 transition" />
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center p-1 text-[9px] text-white text-center font-medium truncate">
+                        {name}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Footer */}

@@ -363,3 +363,39 @@ a {
     transform: translateY(0);
   }
 }
+
+/* ==========================================================================
+   Drawer Slide-in & Backdrop Blur Animations
+   ========================================================================== */
+@keyframes drawerSlideInRight {
+  0% {
+    transform: translateX(100%);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes drawerBackdropFade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.drawer-panel-animate {
+  animation: drawerSlideInRight 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+.drawer-backdrop-animate {
+  animation: drawerBackdropFade 0.2s ease-out forwards;
+}
+
+.drawer-glow-edge {
+  box-shadow: -10px 0 35px -5px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 165, 0, 0.08);
+}

@@ -243,7 +243,7 @@ export default function UserTable() {
     <div className="rounded-2xl border border-border bg-card text-card-foreground p-4 sm:p-6 transition shadow-sm space-y-5">
       {/* Toast Alert */}
       {toastMessage && (
-        <div className="fixed bottom-5 right-5 z-50 flex items-center gap-2.5 rounded-xl border border-[#FFA500]/30 bg-card px-4 py-3 text-xs font-semibold text-foreground shadow-2xl animate-in slide-in-from-bottom-5 duration-200">
+        <div className="fixed top-6 right-6 z-[9999] flex items-center gap-2.5 rounded-2xl border border-[#FFA500]/40 bg-card/95 backdrop-blur-md px-4 py-3 text-xs font-bold text-foreground shadow-2xl animate-in slide-in-from-top-4 duration-200">
           <CheckCircle2 size={16} className="text-[#FFA500]" />
           <span>{toastMessage}</span>
         </div>
@@ -1249,11 +1249,23 @@ export default function UserTable() {
                         {/* Contact Person & Active Fleet (Companies) */}
                         {activeTab === "Companies" && visibleColumns.company !== false && (
                           <td className="px-4 py-3.5">
-                            <div className="font-semibold text-foreground">
-                              {user.contactPerson || "N/A"}
+                            <div className="font-semibold text-foreground flex items-center gap-1.5">
+                              <span>{user.contactPerson || "N/A"}</span>
+                              {user.companyType && (
+                                <span className="text-[10px] font-bold text-[#FFA500] bg-[#FFA500]/10 border border-[#FFA500]/25 px-1.5 py-0.5 rounded">
+                                  {user.companyType}
+                                </span>
+                              )}
                             </div>
-                            <div className="text-[11px] text-muted-foreground">
-                              {user.activeFleetCount} Active Tankers
+                            <div className="text-[11px] text-muted-foreground flex items-center gap-1 mt-0.5">
+                              {user.materialTypes && user.materialTypes.length > 0 ? (
+                                <span className="truncate max-w-[220px]" title={user.materialTypes.join(", ")}>
+                                  {user.materialTypes.slice(0, 2).join(", ")}
+                                  {user.materialTypes.length > 2 ? ` +${user.materialTypes.length - 2}` : ""}
+                                </span>
+                              ) : (
+                                <span>{user.activeFleetCount || 12} Active Tankers</span>
+                              )}
                             </div>
                           </td>
                         )}

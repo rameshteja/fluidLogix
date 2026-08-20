@@ -307,3 +307,71 @@ export const INDIAN_BANKS_FILTER_OPTIONS: AutocompleteOption[] = [
   },
 ];
 
+export const FLEET_DRIVER_FILTER_OPTIONS: AutocompleteOption[] = [
+  {
+    value: "Suresh Mohan",
+    label: "Suresh Mohan",
+    sublabel: "Lic: AP09-2018-00291 • Exp: 2028 • +91 98451 22310",
+    badge: "Verified",
+    category: "Chemical",
+    searchText: "Suresh Mohan Suresh AP09 201800291 ChemCorp",
+  },
+  {
+    value: "Ramesh Kumar",
+    label: "Ramesh Kumar",
+    sublabel: "Lic: TS07-2019-00812 • Exp: 2027 • +91 97120 44589",
+    badge: "Verified",
+    category: "Hazardous",
+    searchText: "Ramesh Kumar TS07 201900812 HazWaste",
+  },
+  {
+    value: "Vijay Sharma",
+    label: "Vijay Sharma",
+    sublabel: "Lic: MH12-2020-00431 • Exp: 2029 • +91 98765 43210",
+    badge: "Verified",
+    category: "Waste Water",
+    searchText: "Vijay Sharma MH12 202000431 AquaTech",
+  },
+  {
+    value: "Anil Verma",
+    label: "Anil Verma",
+    sublabel: "Lic: KA05-2021-00994 • Exp: 2026 • +91 94401 88320",
+    badge: "Verified",
+    category: "Non-Hazard",
+    searchText: "Anil Verma KA05 202100994 EcoWaste",
+  },
+  {
+    value: "Manoj Singh",
+    label: "Manoj Singh",
+    sublabel: "Lic: TN22-2017-00561 • Exp: 2028 • +91 98200 99881",
+    badge: "Verified",
+    category: "Chemical",
+    searchText: "Manoj Singh TN22 201700561 IndusChem",
+  },
+  {
+    value: "Rajesh Patel",
+    label: "Rajesh Patel",
+    sublabel: "Lic: MH04-2019-00129 • Exp: 2027 • +91 99300 44112",
+    badge: "Verified",
+    category: "Hazardous",
+    searchText: "Rajesh Patel MH04 201900129 BioClean",
+  },
+  {
+    value: "Kiran Goud",
+    label: "Kiran Goud",
+    sublabel: "Lic: TS09-2022-00345 • Exp: 2030 • +91 98450 11223",
+    badge: "Verified",
+    category: "Waste Water",
+    searchText: "Kiran Goud TS09 202200345 GreenEco",
+  },
+  {
+    value: "Praveen Yadav",
+    label: "Praveen Yadav",
+    sublabel: "Lic: KA04-2018-00778 • Exp: 2028 • +91 91234 56789",
+    badge: "Verified",
+    category: "Hazardous",
+    searchText: "Praveen Yadav KA04 201800778 ChemCorp",
+  },
+];
+
+
