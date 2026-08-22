@@ -74,13 +74,13 @@ export default function AdminProfileView() {
 
   // Profile Form State
   const [profile, setProfile] = useState<AdminProfileData>({
-    firstName: "Suresh",
-    lastName: "Teja",
-    email: "admin@fluidlogix.io",
-    phone: "+91 98450 11223",
+    firstName: "Ramesh",
+    lastName: "Kantamreddi",
+    email: "ramesh.kreddi@gmail.com",
+    phone: "9848845035",
     jobTitle: "Super Administrator & Head of Fleet Operations",
     department: "Executive Logistics & Financial Compliance",
-    location: "Hyderabad Operations Center & MIDC Hub",
+    location: "Visakhapatnam Operations Center & Port Hub",
     timezone: "Asia/Kolkata (IST, GMT+5:30)",
     language: "English (India)",
     dateFormat: "DD MMM YYYY (e.g., 20 Jul 2025)",
@@ -178,7 +178,7 @@ export default function AdminProfileView() {
           <div className="flex flex-col sm:flex-row sm:items-center gap-5">
             <div className="relative group shrink-0">
               <div className="flex h-20 w-20 sm:h-24 sm:w-24 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#FFA500] via-[#FFB733] to-[#FF8C00] text-[#071522] font-black text-2xl sm:text-3xl shadow-xl shadow-orange-500/20 ring-4 ring-background">
-                <span>ST</span>
+                <span>{(profile.firstName[0] || "") + (profile.lastName[0] || "")}</span>
               </div>
               <div
                 className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-white shadow-md ring-2 ring-background"
@@ -721,7 +721,7 @@ export default function AdminProfileView() {
               </div>
               <p className="text-muted-foreground leading-relaxed">
                 Your Microsoft / Google Authenticator app is linked to account{" "}
-                <strong className="text-foreground">admin@fluidlogix.io</strong>.
+                <strong className="text-foreground">{profile.email}</strong>.
                 Verification codes are required during new sign-ins.
               </p>
             </div>

@@ -97,15 +97,15 @@ export default function ContactPage() {
             <div className="h-10 w-10 rounded-xl bg-[#FFA500]/15 text-[#FFA500] flex items-center justify-center mb-3">
               <Phone size={20} />
             </div>
-            <h3 className="text-sm font-bold text-foreground">Toll-Free Support</h3>
+            <h3 className="text-sm font-bold text-foreground">Direct Support & Dispatch</h3>
             <p className="text-xs text-muted-foreground mt-1 mb-2">
               Instant 24x7 helpline for drivers & dispatch
             </p>
             <a
-              href="tel:18002093584"
+              href="tel:+919848845035"
               className="text-xs font-mono font-bold text-[#FFA500] hover:underline"
             >
-              1800-209-FLUID (35843)
+              +91 9848845035
             </a>
           </div>
 
@@ -119,10 +119,10 @@ export default function ContactPage() {
               Response within 15 minutes guaranteed
             </p>
             <a
-              href="mailto:support@fluidlogix.io"
+              href="mailto:ramesh.kreddi@gmail.com"
               className="text-xs font-mono font-bold text-foreground hover:text-[#FFA500] transition"
             >
-              support@fluidlogix.io
+              ramesh.kreddi@gmail.com
             </a>
           </div>
 
@@ -131,12 +131,12 @@ export default function ContactPage() {
             <div className="h-10 w-10 rounded-xl bg-sky-500/15 text-sky-400 flex items-center justify-center mb-3">
               <Building2 size={20} />
             </div>
-            <h3 className="text-sm font-bold text-foreground">Corporate HQ</h3>
+            <h3 className="text-sm font-bold text-foreground">Operations Center</h3>
             <p className="text-xs text-muted-foreground mt-1 mb-2">
-              Cyber Gateway, HITEC City
+              Harbour & Industrial Logistics Zone
             </p>
             <span className="text-xs text-foreground font-medium">
-              Hyderabad, TS 500081
+              Visakhapatnam, Andhra Pradesh
             </span>
           </div>
 
@@ -145,12 +145,12 @@ export default function ContactPage() {
             <div className="h-10 w-10 rounded-xl bg-purple-500/15 text-purple-400 flex items-center justify-center mb-3">
               <Truck size={20} />
             </div>
-            <h3 className="text-sm font-bold text-foreground">Operations Control</h3>
+            <h3 className="text-sm font-bold text-foreground">Operations Lead</h3>
             <p className="text-xs text-muted-foreground mt-1 mb-2">
-              Trans-Harbour Chemical Corridor
+              Ramesh Kantamreddi
             </p>
             <span className="text-xs text-foreground font-medium">
-              Navi Mumbai, MH 400705
+              Head of Fleet & Tanker Allocation
             </span>
           </div>
         </div>
@@ -223,7 +223,7 @@ export default function ContactPage() {
                       <input
                         type="text"
                         required
-                        placeholder="e.g. Anand Mahindra"
+                        placeholder="e.g. Ramesh Kantamreddi"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         className="h-9 w-full rounded-xl border border-border bg-background px-3 text-xs text-foreground outline-none focus:border-[#FFA500] transition"
@@ -237,7 +237,7 @@ export default function ContactPage() {
                       <input
                         type="email"
                         required
-                        placeholder="e.g. anand@company.com"
+                        placeholder="e.g. ramesh.kreddi@gmail.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="h-9 w-full rounded-xl border border-border bg-background px-3 text-xs text-foreground outline-none focus:border-[#FFA500] transition"

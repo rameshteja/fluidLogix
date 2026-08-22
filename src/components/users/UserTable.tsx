@@ -525,13 +525,13 @@ export default function UserTable() {
             />
           </button>
 
-          {/* + Add User Button */}
+          {/* Add User Button */}
           <button
             onClick={() => setIsAddOpen(true)}
             className="flex items-center gap-1.5 h-9 rounded-xl bg-[#FFA500] px-4 text-xs font-bold text-[#071522] shadow-lg shadow-orange-500/20 hover:bg-[#FFB733] transition cursor-pointer"
           >
             <Plus size={16} className="stroke-[2.5]" />
-            <span>+ Add User</span>
+            <span>Add User</span>
           </button>
         </div>
       </div>

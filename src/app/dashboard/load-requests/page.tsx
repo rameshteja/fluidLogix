@@ -96,7 +96,7 @@ export default function LoadRequestsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground transition-colors duration-200 flex selection:bg-primary selection:text-primary-foreground">
+    <div className="min-h-screen w-full max-w-full overflow-x-hidden bg-background text-foreground transition-colors duration-200 flex selection:bg-primary selection:text-primary-foreground">
       {/* Left Sidebar Navigation */}
       <Sidebar
         mobileOpen={mobileMenuOpen}

@@ -6,6 +6,9 @@ import {
   ChevronDown,
   LogOut,
   Menu,
+  PanelLeft,
+  PanelLeftClose,
+  PanelLeftOpen,
   Search,
   Shield,
   ShieldCheck,
@@ -16,9 +19,12 @@ import {
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import ThemeToggle from "@/components/theme/ThemeToggle";
+import { useSidebar } from "@/context/SidebarContext";
 
 interface TopNavbarProps {
-  onToggleMobileMenu: () => void;
+  onToggleMobileMenu?: () => void;
+  isCollapsed?: boolean;
+  onToggleCollapse?: () => void;
   title?: string;
   subtitle?: string;
 }
@@ -48,10 +54,17 @@ const notifications = [
 ];
 
 export default function TopNavbar({
-  onToggleMobileMenu,
+  onToggleMobileMenu: propOnToggleMobileMenu,
+  isCollapsed: propIsCollapsed,
+  onToggleCollapse: propOnToggleCollapse,
   title = "Dashboard Overview",
   subtitle = "Sunday, 20 July 2025",
 }: TopNavbarProps) {
+  const sidebar = useSidebar();
+  const isCollapsed = propIsCollapsed !== undefined ? propIsCollapsed : sidebar.isCollapsed;
+  const onToggleCollapse = propOnToggleCollapse !== undefined ? propOnToggleCollapse : sidebar.toggleCollapse;
+  const onToggleMobileMenu = propOnToggleMobileMenu !== undefined ? propOnToggleMobileMenu : sidebar.openMobile;
+
   const [searchQuery, setSearchQuery] = useState("");
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -80,22 +93,24 @@ export default function TopNavbar({
   }, []);
 
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-card/90 text-card-foreground px-4 py-3.5 backdrop-blur-md sm:px-8 transition-colors duration-200">
-      {/* Left: Title & Date + Mobile Menu Trigger */}
+    <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-card/95 text-card-foreground px-4 py-3 backdrop-blur-md sm:px-6 transition-colors duration-200 min-h-[68px]">
+      {/* Left: Title & Mobile Menu Trigger */}
       <div className="flex items-center gap-3.5">
+        {/* Mobile Menu Trigger (Mobile only) */}
         <button
           onClick={onToggleMobileMenu}
-          className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground lg:hidden cursor-pointer"
-          aria-label="Open menu"
+          className="flex md:hidden items-center justify-center h-10 w-10 rounded-xl border border-border bg-muted/50 text-foreground hover:bg-[#FFA500]/15 hover:text-[#FFA500] transition cursor-pointer shadow-sm"
+          aria-label="Open Mobile Menu"
         >
           <Menu size={20} />
         </button>
 
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+        {/* Title & Subtitle */}
+        <div className="flex flex-col justify-center">
+          <h1 className="text-lg sm:text-xl font-bold tracking-tight text-foreground leading-tight">
             {title}
           </h1>
-          <p className="text-xs font-medium text-muted-foreground">
+          <p className="text-[11px] font-medium text-muted-foreground leading-none mt-0.5">
             {subtitle}
           </p>
         </div>
@@ -187,7 +202,7 @@ export default function TopNavbar({
         {/* Theme Toggle */}
         <ThemeToggle align="right" />
 
-        {/* User Profile Avatar (SA) */}
+        {/* User Profile Avatar (RK) */}
         <div className="relative" ref={profileRef}>
           <button
             onClick={() => setShowProfileMenu(!showProfileMenu)}
@@ -195,23 +210,23 @@ export default function TopNavbar({
             aria-label="User profile menu"
           >
             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-xs shadow-md shadow-amber-500/20 transition hover:scale-105">
-              SA
+              RK
             </div>
           </button>
 
           {/* Profile Dropdown Popover */}
           {showProfileMenu && (
-            <div className="absolute right-0 mt-2 w-56 rounded-2xl border border-border bg-popover text-popover-foreground p-2 shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-150">
-              <div className="px-3 py-2 border-b border-border">
-                <div className="text-xs font-semibold text-foreground">
-                  Super Admin
+            <div className="absolute right-0 mt-2 w-60 rounded-2xl border border-border bg-popover text-popover-foreground p-2 shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-150">
+              <div className="px-3 py-2.5 border-b border-border">
+                <div className="text-xs font-bold text-foreground">
+                  Ramesh Kantamreddi
                 </div>
-                <div className="text-[11px] text-muted-foreground truncate">
-                  admin@fluidlogix.com
+                <div className="text-[11px] font-mono text-muted-foreground truncate">
+                  ramesh.kreddi@gmail.com
                 </div>
-                <div className="mt-1 inline-flex items-center gap-1 text-[10px] font-medium text-emerald-500">
+                <div className="mt-1.5 inline-flex items-center gap-1.5 text-[10px] font-semibold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  Full System Control
+                  Super Administrator
                 </div>
               </div>
 
