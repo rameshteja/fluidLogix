@@ -12,7 +12,7 @@ export default function DashboardPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen w-full max-w-full overflow-x-hidden bg-background text-foreground transition-colors duration-200 flex selection:bg-primary selection:text-primary-foreground">
+    <div className="h-screen w-screen overflow-hidden bg-background text-foreground transition-colors duration-200 flex selection:bg-primary selection:text-primary-foreground">
       {/* Left Sidebar Navigation */}
       <Sidebar
         mobileOpen={mobileMenuOpen}
@@ -20,12 +20,12 @@ export default function DashboardPage() {
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 min-h-screen overflow-x-clip">
+      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
         {/* Top Navbar */}
         <TopNavbar onToggleMobileMenu={() => setMobileMenuOpen(true)} />
 
         {/* Dashboard Main Workspace */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-7 space-y-5 max-w-[1500px] w-full mx-auto">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 lg:p-7 space-y-5 max-w-[1500px] w-full mx-auto custom-scrollbar">
           {/* Row 1: Key Metric Cards */}
           <StatCards />
 
