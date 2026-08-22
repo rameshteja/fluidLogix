@@ -51,7 +51,7 @@ export default function StatCards() {
         return (
           <div
             key={stat.id}
-            className="group relative rounded-2xl border border-border bg-card p-4 sm:p-5 transition-all duration-200 hover:border-primary/40 shadow-sm"
+            className="group relative rounded-2xl border border-border bg-card p-4 sm:p-5 transition-all duration-200 hover:border-primary/40 shadow-sm h-full flex flex-col justify-between"
           >
             {/* Top Icon */}
             <div className="flex items-center justify-between mb-3">
